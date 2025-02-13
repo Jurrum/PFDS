@@ -27,8 +27,13 @@ involves a lot of trial and error
 ie. the process of making a prototype is more important than the prototype itself
 
 -- Panel Discussion --
+A lot of info about the way these researchers use MMR/Qual/Quant
 
+"You have to let go of doing it to please someone else. true findings appear when you start thinking for yourself""
 
+--- Thesis Tip --
+
+Write a convincing narrative! No need for chronology just tell a story that works
 
 """
 
