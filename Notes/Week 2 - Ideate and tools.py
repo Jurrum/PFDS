@@ -86,3 +86,76 @@ in any normal siuation done by a large company that specilizes in this. Not by a
     - 
     
 """
+
+""""
+Notes own lecture by Alice
+
+Subtopics
+    - Social media feeds
+        - Missing from these feeds
+        - What can we think of so they create possibilities or solve problems
+    - traditional media and news platforms
+    - Meditation media
+    - Digital books and readers
+        - enhance oraugemtn reading experience with more than just text
+        - Generative AI / images?
+
+
+Vision or problem oriented approach
+- start with something you'd like to explore, exploring phenomena that emerge with technological immersion
+- Leverage emergent tech to sole problem of interuptions
+
+Each person gets personal responsibilites for the project
+- 
+What could be a vision 
+- How will you be scrolling
+- What will content look like?
+- What will the experience be like?
+- 
+
+
+What are the problems
+- Polarization
+- Algorhitm desgin
+- Mindmap with all prolems
+- Ovetwhelming / over stimulation
+- 
+
+- Get a grasp
+
+
+Problems
+- Overstimulation
+- Polarization
+- Algorhitm design
+- Control of user
+- Social media addiction
+- Suidice rates among 
+- Influencer power / culture
+- Underrepresentation in true engagement (most people dont interact)
+- Unhealthy trends
+- Fake news - disinformation
+- Extortion
+- Fake imagery
+- Reality distortion
+- Privacy
+- Critical thinking reduced
+- What is truth? 
+- History of misinformation
+- Reccomendation effects on behavior and opinions
+- Confirmation Bias
+- Echo chambers
+- Filter bubbles
+- Censorship
+- Manipulation
+- Future AI Archetypes / Influencers?
+- AI generated content?
+- What is all platforms are government owned?
+- What if all platforms are owned by one company?
+- What if all platforms are owned by one person?
+
+(PossibleP) Solutions
+- 
+
+
+"""
