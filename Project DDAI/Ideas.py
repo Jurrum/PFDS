@@ -13,5 +13,8 @@ Ideas for Social media feed futures
 - Pure news feed that is based in social media, so cpature quick interest and then allow for more exploration
 - 
 
+- Verwijderen van Social accounts
+- Interacties toevoegen waarbij een tinder effect wordt toegepast (content liken of wegswipen)
+
 
 """
