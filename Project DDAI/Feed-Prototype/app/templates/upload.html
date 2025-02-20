@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Content</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <header>
+        <h1>Create a Post</h1>
+        <a href="{{ url_for('main.home') }}" class="back-button">← Back to Feed</a>
+    </header>
+
+    <div id="upload-container">
+        <form id="uploadForm">
+            <label for="text">Write something:</label>
+            <textarea name="text" id="text" rows="4"></textarea>
+
+            <label for="image">Upload an image:</label>
+            <input type="file" name="image" id="image" accept="image/*">
+
+            <button type="submit" class="submit-button">Post</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
