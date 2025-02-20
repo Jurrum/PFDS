@@ -6,5 +6,6 @@ Homework for week 3
     - APA + Links for each paper!!!
     + 2 sentences that summarize the content, why is it relevant
 
+- 
 
 """
