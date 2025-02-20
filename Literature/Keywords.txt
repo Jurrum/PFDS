@@ -1,0 +1,29 @@
+---- Keywords - Social Media & Feed design ----
+
+
+
+----- Joram -----
+ Interactive Machine Teaching (IMT): 
+        to improve feed customization, enabling users to "teach" algorithms what they prefer.
+Personalization	
+        Core concept in algorithmic feed curation, addressing user-specific content recommendations (Paper 1, 4).
+Exploration vs. Exploitation	
+        Trade-off between showing familiar vs. novel content, critical for algorithm balance (Paper 4).
+Algorithmic Transparency	
+        Need for users to understand why content appears in their feed (Paper 1, 2, 4).
+Misinformation Flagging	
+        Design of effective misinformation labeling and its impact on trust (Paper 2).
+Fact-Checking	
+        Role of verification explanations in user trust and content sharing behavior (Paper 2).
+News Literacy	
+        Users' ability to critically engage with news content, enhanced through gamification (Paper 3).
+Filter Bubbles	
+        Risk of over-personalization leading to ideological echo chambers (Paper 4).
+Observer Effect	
+        Behavioral changes when users know they are being monitored, impacting feed engagement patterns (Paper 5).
+User Control & Agency	
+        Allowing users to define their own content preferences (Paper 1, 4).
+Engagement 
+        Metrics	The role of likes, comments, shares, and watch time in shaping feeds (Paper 1, 4).
+
+        

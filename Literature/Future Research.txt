@@ -1,0 +1,30 @@
+----- Future Research -----
+
+
+--- Joram ---
+
+By combining insights from these papers, we can improve social media feed design in the following ways:
+✅ User Agency: Shift from passive consumption to interactive, teachable feeds.
+✅ Transparency: Users should understand why they see content and be able to adjust feed parameters.
+✅ Balance: Prevent filter bubbles by ensuring a healthy mix of exploration and personalization.
+✅ Trust & Literacy: Fact-checking should be integrated, educational, and engaging to combat misinformation.
+✅ Ethical Data Use: Privacy-respecting engagement tracking is necessary to reduce the observer effect bias.
+
+1. Refining User Control Over Algorithmic Feeds
+        While teachable feeds have been explored, there is little empirical work on how users would actively engage with these systems (Paper 1).
+        Research should investigate interface usability when integrating interactive machine teaching for content personalization (Paper 1).
+2. Studying the Impact of Personalized Feeds on Mental Well-being
+        There is limited empirical data on the long-term psychological effects of extreme personalization vs. diverse content exposure (Paper 4).
+        Research should explore the relationship between user agency in feeds and digital well-being.
+3. Balancing Algorithmic Recommendations with Human-Curated Content
+        Hybrid models that combine automated ranking with user-driven prioritization could be studied in detail (Paper 1, 4).
+        Investigate how much control users actually want vs. how much automated decision-making is preferred (Paper 4).
+4. Understanding the Observer Effect in Real-World Social Media Use
+        More studies should analyze how self-awareness impacts engagement patterns over time, especially in public vs. private settings (Paper 5).
+        Future research should focus on privacy-aware engagement tracking to minimize behavioral distortion (Paper 5).
+5. Evaluating the Effectiveness of Gamified Interventions in Social Media
+        While "Fakey" showed promising results, more research is needed to scale gamified literacy tools for diverse audiences (Paper 3).
+        Studying gamification beyond news literacy, such as improving algorithm awareness and engagement habits, could be valuable (Paper 3).
+6. Investigating Political and Ideological Biases in Algorithmic Feeds
+        Research should examine whether misinformation flagging disproportionately affects different political groups (Paper 2).
+        More work is needed to prevent algorithmic amplification of ideological biases (Paper 2, 4).
