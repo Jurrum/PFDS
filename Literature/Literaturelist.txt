@@ -30,3 +30,45 @@ Search: https://dl.acm.org/action/doSearch?fillQuickSearch=false&target=advanced
     https://dl.acm.org/doi/pdf/10.1145/3613904.3642078
     File: 3613904.3642078.pdf
         Koustuv Saha, Pranshu Gupta, Gloria Mark, Emre Kiciman, and Munmun De Choudhury. 2024. Observer Effect in Social Media Use. In Proceedings of the 2024 CHI Conference on Human Factors in Computing Systems (CHI '24). Association for Computing Machinery, New York, NY, USA, Article 739, 1–20. https://doi.org/10.1145/3613904.3642078
+
+
+
+---- Iris ----
+
+1.Effect of Social Media Addiction on Attention Span and Aggression among University Students
+    https://www.researchgate.net/profile/Muhammad-Hussain-223/publication/381403305_Effect_of_Social_Media_Addiction_on_Attention_Span_and_Aggression_among_University_Students/links/666b9e3d85a4ee7261c0ef4f/Effect-of-Social-Media-Addiction-on-Attention-Span-and-Aggression-among-University-Students.pdf
+        Hussain, Muhammad & Mushtaq, Nudrat & Mahsud, Nasim & Afzal, Huda & Naseer, Saliha & Hussain, Dabeer. (2024).  
+        APA:Husain, M., Mushtaq, N., Mahsud, N. K., Afzal, H., Naseer, S., & Hussain, D. (2024). The Effect of Social Media Addiction on Attention Span and Aggression among University Students.
+    Keywords: social media addiction, mindful, attention span, Agression, Effect of Media
+    This paper is about research of the correlation between SM addiction and attention span (negative corrolation) and agression ( positive correlation) . Mindfull and agression has negative correlation.
+    So addiction -> more likely to have a lower span and more agression. lower mindfullnes correlates with more agression behaviour 
+
+2. Bluesky and the AT Protocol: Usable Decentralized Social Media
+    chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://dl.acm.org/doi/pdf/10.1145/3694809.3700740
+        Kleppmann, M., Frazee, P., Gold, J., Graber, J., Holmgren, D., Ivy, D., Johnson, J., Newbold, B., & Volpert, J. (2024).
+        APA:Kleppmann, M., Frazee, P., Gold, J., Graber, J., Holmgren, D., Ivy, D., Johnson, J., Newbold, B., & Volpert, J. (2024). Bluesky and the AT Protocol: Usable Decentralized Social Media. AMC Digital Library, 1–7. https://doi.org/10.1145/3694809.3700740
+    Keywords: social networks; decentralization; federation
+    This paper talks about the decentralise SM platform Bluesky. Maybe interesting to see their challenges if we want to create a new feed/SM concept to test different ways of social connection online outside of existing SM platforms. 
+
+3. Reimagining the Future of Technology: “The Social Dilemma” Review
+    https://link.springer.com/article/10.1007/s10551-021-04816-1
+        APA: Du, S. Reimagining the Future of Technology: “The Social Dilemma” Review. J Bus Ethics 177, 213–215 (2022). https://doi.org/10.1007/s10551-021-04816-1
+        no key words. Social dilemma; 
+    I watched the social dilemma again and this a a review of it. Social media influences individual behaviour with fake news, recommendations, manipulative algorithms what leads to polarization, plastic surgeries, suicide, silent family dinners. the so called missions of facebook and google to give people power to build community and accessible information is not what is seems. The Free services are not free, we are the product.
+    User attention is the product. So our attention is being maximalised with behavioural techniques (manipulation). 
+    This review goes deeper in the narritive by naming other techs like google home: our data on SM but also at home is used (to predict?) privacy issues and no controll how data is used
+    ''The social Dilemma'' is made with the people who worked in high positions in google facebook insta and pinterest etc.
+
+4. Toward Mitigating Misinformation and Social Media Manipulation in LLM Era
+    https://dl.acm.org/doi/10.1145/3589335.3641256
+    ''These challenges motivate researchers to develop algorithms to mitigate misinformation and social media manipulations.
+    with this pubication is a 2.5 h tutorial/lecture. It discusses manipulation by LLM that can develope fake news very well. ANd strategies to mitigate this spreading of fake News
+    Abstract
+        The pervasive abuse of misinformation to influence public opinion on social media has become increasingly evident in various domains, encompassing politics, as seen in presidential elections, and healthcare, most notably during the recent COVID-19 pandemic. This threat has grown in severity as the development of Large Language Models (LLMs) empowers manipulators to generate highly convincing deceptive content with greater efficiency. Furthermore, the recent strides in chatbots integrated with LLMs, such as ChatGPT, have enabled the creation of human-like interactive social bots, posing a significant challenge to both human users and the social-bot-detection systems of social media platforms.These challenges motivate researchers to develop algorithms to mitigate misinformation and social media manipulations. This tutorial introduces the advanced machine learning researches that are helpful for this goal, including (1) detection of social manipulators, (2) learning causal models of misinformation and social manipulation, and (3) LLM-generated misinformation detection. In addition, we also present possible future directions.
+
+5. On the Impact of Social Media Recommendations on Opinion Consensus
+    https://link.springer.com/chapter/10.1007/978-3-031-08421-8_18
+        APA: 
+    it has been observed that social media may have a relevant effect in many real-world critical settings, such as in electoral campaigns [3, 30]. For example, some studies showed that the social media may lead to extremism [14] and polarization in individuals’ opinions [2].
+
+    
