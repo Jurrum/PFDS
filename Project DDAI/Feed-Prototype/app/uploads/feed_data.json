@@ -18,5 +18,9 @@
     {
         "text": "Hello, dit is een testpost",
         "image": "/uploads/8.-selfie-1162x1162.jpeg"
+    },
+    {
+        "text": "Hello there,",
+        "image": null
     }
 ]
