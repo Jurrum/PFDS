@@ -1,0 +1,31 @@
+---- Design principles for Social media feed design ----
+
+
+--- Joram ---
+1. Enhance User Control Over Feed Customization (Personalization & Agency)
+Implement teachable algorithms where users can provide explicit feedback to train the system (Paper 1, Paper 4).
+Introduce "interactive machine teaching" (IMT) principles to allow users to define relevance signals beyond just likes and follows (Paper 1).
+Allow users to manually adjust content exposure settings, such as toggling between exploration vs. exploitation modes in recommendation systems (Paper 4).
+
+2. Improve Transparency and Explainability in Algorithmic Feeds
+Display clear, human-readable explanations of why a post appears in a feed (Paper 2, Paper 4).
+Provide real-time control dashboards where users can tweak algorithmic biases (Paper 1, Paper 4).
+Include fact-checking explanations for flagged misinformation to increase trust (Paper 2).
+
+3. Integrate Gamification and Educational Elements for Digital Literacy
+Use interactive, gamified interventions like "Fakey" to train users to critically assess news sources (Paper 3).
+Create educational prompts in feeds to guide users on identifying low-credibility content (Paper 3).
+
+4. Support Multi-Dimensional Feed Customization (Beyond Likes and Shares)
+Use a variety of engagement signals beyond just clicks and watch time, including content depth, user intent, and thematic preferences (Paper 1, Paper 4).
+Allow users to categorize followed accounts into customized content groups, prioritizing human connections over content-based ranking (Paper 1).
+
+5. Mitigate Filter Bubbles and Algorithmic Manipulation Risks
+Design algorithmic diversity mechanisms that ensure periodic exploration of new content rather than reinforcing existing biases (Paper 4).
+Introduce "diverse content nudges" that encourage users to engage with a broader range of viewpoints (Paper 2, Paper 3).
+Implement "bounded personalization", where the system intentionally introduces a mix of familiar and novel content (Paper 4).
+
+6. Account for the Observer Effect in Social Media Behavior
+Acknowledge that users behave differently when they know they are being observed, leading to potential biases in engagement data (Paper 5).
+Conduct longitudinal research to account for behavioral shifts over time, rather than relying on snapshot analyses (Paper 5).
+Provide privacy-preserving customization tools that allow users to experiment with feed settings without fear of being tracked (Paper 5).

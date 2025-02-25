@@ -1,2 +1,32 @@
 APA + Links for each paper!!!
 + 2 sentences that summarize the content, why is it relevant
+
+
+---- Joram ----
+Search: https://dl.acm.org/action/doSearch?fillQuickSearch=false&target=advanced&expand=dl&field1=AllField&text1=Social+media+feed+design
+
+
+1 Mapping the Design Space of Teachable Social Media Feed Experiences
+    https://dl.acm.org/doi/pdf/10.1145/3613904.3642120
+    File: 3613904.3642120.pdf
+        K. J. Kevin Feng, Xander Koo, Lawrence Tan, Amy Bruckman, David W. McDonald, and Amy X. Zhang. 2024. Mapping the Design Space of Teachable Social Media Feed Experiences. In Proceedings of the 2024 CHI Conference on Human Factors in Computing Systems (CHI '24). Association for Computing Machinery, New York, NY, USA, Article 733, 1–20. https://doi.org/10.1145/3613904.3642120
+
+2 Discerning Individual Preferences for Identifying
+    https://dl.acm.org/doi/pdf/10.1145/3627043.3659545
+    File: 3627043.3659545.pdf
+        Dipto Barman, Kevin Koidl, and Owen Conlan. 2024. Discerning Individual Preferences for Identifying and Flagging Misinformation on Social Media. In Proceedings of the 32nd ACM Conference on User Modeling, Adaptation and Personalization (UMAP '24). Association for Computing Machinery, New York, NY, USA, 110–119. https://doi.org/10.1145/3627043.3659545
+
+3 Fakey: A Game Intervention to Improve News Literacy on Social Media
+    https://dl.acm.org/doi/pdf/10.1145/3449080
+    File: 3449080.pdf
+        Nicholas Micallef, Mihai Avram, Filippo Menczer, and Sameer Patil. 2021. Fakey: A Game Intervention to Improve News Literacy on Social Media. Proc. ACM Hum.-Comput. Interact. 5, CSCW1, Article 6 (April 2021), 27 pages. https://doi.org/10.1145/3449080
+
+4 TikTok and the Art of Personalization: Investigating Exploration and Exploitation on Social Media Feeds
+    https://dl.acm.org/doi/pdf/10.1145/3589334.3645600
+    File: 3589334.3645600.pdf
+        Karan Vombatkere, Sepehr Mousavi, Savvas Zannettou, Franziska Roesner, and Krishna P. Gummadi. 2024. TikTok and the Art of Personalization: Investigating Exploration and Exploitation on Social Media Feeds. In Proceedings of the ACM Web Conference 2024 (WWW '24). Association for Computing Machinery, New York, NY, USA, 3789–3797. https://doi.org/10.1145/3589334.3645600
+
+5 Observer Efect in Social Media Use
+    https://dl.acm.org/doi/pdf/10.1145/3613904.3642078
+    File: 3613904.3642078.pdf
+        Koustuv Saha, Pranshu Gupta, Gloria Mark, Emre Kiciman, and Munmun De Choudhury. 2024. Observer Effect in Social Media Use. In Proceedings of the 2024 CHI Conference on Human Factors in Computing Systems (CHI '24). Association for Computing Machinery, New York, NY, USA, Article 739, 1–20. https://doi.org/10.1145/3613904.3642078
