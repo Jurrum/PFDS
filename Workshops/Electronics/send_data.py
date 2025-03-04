@@ -25,7 +25,7 @@ esp = esp32spi.ESP_SPIcontrol(spi, esp32_cs, esp32_ready, esp32_reset)
 #photo_sensor = analogio.AnalogIn(board.A0)
 #temp_sensor = board.A2
 #pot_sensor = analogio.AnalogIn(board.A4)
-dist_sensor = adafruit_vl53l0x.VL53L0X(i2c_port)
+#dist_sensor = adafruit_vl53l0x.VL53L0X(i2c_port)
 
 # Thermistor setup (uncomment if using; also uncomment "temp_sensor" above)
 """
@@ -46,7 +46,7 @@ WIFI_PASSWORD = 'sparkypi'
 MQTT_BROKER = 'ide-education.cloud.shiftr.io' # DON'T CHANGE
 MQTT_USERNAME = 'ide-education' # DON'T CHANGE
 MQTT_PASSWORD = 'iOF42Md4VQ3CXJxS' # DON'T CHANGE
-MQTT_TOPIC = 'PF/cool_group' # enter your topic here (should match MCU #2 "receive_data.py")
+MQTT_TOPIC = 'PF/social_media' # enter your topic here (should match MCU #2 "receive_data.py")
 
 
 # labels for types of input user can select (example: text or sensor))
