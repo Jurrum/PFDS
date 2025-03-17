@@ -25,6 +25,10 @@ function loadFeed() {
         .then(response => response.json())
         .then(posts => {
             console.log("Loaded posts:", posts);
+            
+            // Apply sophisticated recommendation algorithm
+            posts = recommendPosts(posts);
+            
             const feed = document.getElementById("feed");
             feed.innerHTML = "";
             posts.forEach(post => {
@@ -36,4 +40,13 @@ function loadFeed() {
             });
         })
         .catch(error => console.error("Error:", error));
+}
+
+function recommendPosts(posts) {
+    // More sophisticated recommendation logic
+    return posts.sort((a, b) => {
+        let aScore = (a.likes || 0) * 2 + (a.shares || 0) * 3 + (a.comments || 0) * 1.5;
+        let bScore = (b.likes || 0) * 2 + (b.shares || 0) * 3 + (b.comments || 0) * 1.5;
+        return bScore - aScore;
+    });
 }
