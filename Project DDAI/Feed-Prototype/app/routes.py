@@ -1,19 +1,17 @@
-# app/routes.py
 
 import os
+from uuid import uuid4
 from flask import (
-    Blueprint,
-    render_template,
-    request,
-    jsonify,
-    send_from_directory,
-    url_for
+    Blueprint, render_template, request,
+    jsonify, send_from_directory, url_for,
+    redirect, session
 )
 from werkzeug.utils import secure_filename
 
 from app import db
-from app.models.content import Content
+from app.models.content  import Content
 from app.models.category import Category
+from app.models.rating   import Rating
 
 main = Blueprint('main', __name__)
 
