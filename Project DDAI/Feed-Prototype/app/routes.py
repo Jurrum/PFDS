@@ -12,6 +12,8 @@ from app import db
 from app.models.content  import Content
 from app.models.category import Category
 from app.models.rating   import Rating
+from app.utils.generation import generate_texts
+
 
 main = Blueprint('main', __name__)
 
@@ -93,27 +95,42 @@ def get_posts():
     """
     Return JSON list of posts, optionally filtered by category,
     and sorted by the recommendation scoring function.
+    If this is the very first page and no posts exist yet, auto‐generate 5 general ones.
     """
+    # 1) Base query + optional category filter
     q = Content.query
     cat = request.args.get('category')
     if cat:
         q = q.filter_by(category=cat)
 
-    # simple pagination parameters (for future infinite scroll)
+    # 2) Pagination
     try:
         limit  = int(request.args.get('limit', 50))
         offset = int(request.args.get('offset', 0))
     except ValueError:
         limit, offset = 50, 0
 
+    # 3) Fetch existing posts
     posts = q.offset(offset).limit(limit).all()
 
-    # scoring: 2*likes + 3*shares + 1.5*comments - 1*dislikes
-    def score(p):
-        return (p.likes * 2 + p.shares * 3 + p.comments * 1.5 - p.dislikes)
+    # 4) If first page and empty, generate 5 general posts
+    if offset == 0 and not posts:
+        from app.utils.generation import generate_texts
+        texts = generate_texts(None, 5)
+        for txt in texts:
+            p = Content(text=txt, category='General')
+            db.session.add(p)
+            posts.append(p)
+        db.session.commit()
 
+    # 5) Scoring & sort
+    def score(p):
+        return p.likes * 2 + p.shares * 3 + p.comments * 1.5 - p.dislikes
     posts.sort(key=score, reverse=True)
+
+    # 6) Return JSON
     return jsonify([p.to_dict() for p in posts])
+
 
 
 @main.route('/posts/<int:post_id>/like', methods=['POST'])
@@ -200,4 +217,25 @@ def debug_posts():
     posts = Content.query.all()
     
     return jsonify([p.to_dict() for p in posts])
+
+
+@main.route('/generate', methods=['POST'])
+def generate_posts():
+    """
+    Generate `count` new posts (3 by default) in `category` (or general).
+    Saves them to the DB and returns their dicts.
+    """
+    data = request.get_json(force=True)
+    category = data.get('category', None)
+    count    = int(data.get('count', 3))
+
+    texts = generate_texts(category, count)
+    new_posts = []
+    for txt in texts:
+        post = Content(text=txt, category=category or 'General')
+        db.session.add(post)
+        new_posts.append(post)
+    db.session.commit()
+
+    return jsonify([p.to_dict() for p in new_posts]), 201
 

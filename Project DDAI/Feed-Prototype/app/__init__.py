@@ -1,9 +1,18 @@
 # app/__init__.py
-
+from dotenv import load_dotenv
+load_dotenv() 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import openai
+import os
+
+
 
 db = SQLAlchemy()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
+    raise RuntimeError("Missing OPENAI_API_KEY in environment")
+
 
 def create_app():
     app = Flask(__name__)
