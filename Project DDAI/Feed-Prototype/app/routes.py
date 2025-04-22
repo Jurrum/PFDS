@@ -177,6 +177,24 @@ def update_post_category(post_id):
     db.session.commit()
     return jsonify(post.to_dict()), 200
 
+@main.route('/posts/<int:post_id>/rate', methods=['POST'])
+def rate_post(post_id):
+    """Submit a 1–5 rating for a post."""
+    post = Content.query.get_or_404(post_id)
+    data = request.get_json(force=True)
+    val  = data.get('value')
+    if not isinstance(val, int) or val < 1 or val > 5:
+        return jsonify({"error": "Rating must be an integer 1–5"}), 400
+
+    post.rating_total += val
+    post.rating_count += 1
+    db.session.commit()
+
+    return jsonify({
+        "average_rating": post.average_rating,
+        "rating_count": post.rating_count
+    }), 200
+
 
 @main.route('/debug_posts')
 def debug_posts():

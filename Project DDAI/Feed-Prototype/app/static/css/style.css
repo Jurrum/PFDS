@@ -1,4 +1,4 @@
-/* General page styles */
+/* ——— General page styles ——— */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
@@ -7,10 +7,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-/* Header styles */
-header {
+  }
+  
+  /* ——— Header ——— */
+  header {
     width: 100%;
     background-color: #1877f2;
     color: white;
@@ -23,17 +23,16 @@ header {
     left: 0;
     z-index: 100;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Make sure header spacing doesn't create unnecessary whitespace */
-header h1 {
+  }
+  header h1 {
     margin: 0;
     font-size: 24px;
-}
-
-/* Back button */
-.upload-button, .back-button {
-    font: 12px;
+  }
+  
+  /* ——— Create/Back buttons ——— */
+  .upload-button,
+  .back-button {
+    font-size: 12px;
     position: absolute;
     left: 10px;
     top: 50%;
@@ -44,186 +43,24 @@ header h1 {
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
-}
-
-.upload-button:hover, .back-button:hover {
+  }
+  .upload-button:hover,
+  .back-button:hover {
     background-color: #eeeeee;
-}
-
-/* Feed container */
-#feed-container {
-    margin-top: 5 px; /* Prevents posts from hiding behind the fixed header */
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Post box styling */
-.post {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Post text */
-.post p {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-/* Post images */
-.post img {
-    max-width: 100%;
-    border-radius: 5px;
-    display: block;
-    margin: auto;
-}
-
-/* Upload form container */
-#upload-container {
-    margin-top: 80px;
+  }
+  
+  /* ——— Category bar ——— */
+  .category-buttons {
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-/* Form styling */
-form {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-}
-
-/* Textarea */
-textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-}
-
-/* File input */
-input[type="file"] {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-/* Submit button */
-.submit-button {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-}
-
-.submit-button:hover {
-    background-color: #218838;
-}
-
-/* ——— Form tweaks ——— */
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    background: white;
-    box-sizing: border-box;
-}
-
-/* Ensure file input matches other fields */
-input[type="file"] {
-    padding: 8px;
-    font-size: 16px;
-}
-
-/* ——— Button base styles ——— */
-button {
-    font-family: inherit;
-    font-size: 12px;
-    transition: background-color 0.2s ease;
-}
-
-/* Submit button already defined; ensure consistency */
-.submit-button {
-    /* you can keep green or switch to blue if you prefer */
-    background-color: #28a745;
-}
-.submit-button:hover {
-    background-color: #218838;
-}
-
-/* ——— Like/Dislike action buttons ——— */
-.actions {
-    margin-top: 10px;
-    display: flex;
     gap: 10px;
-}
-
-.like-btn,
-.dislike-btn {
-    background-color: #1877f2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-}
-
-.like-btn:hover,
-.dislike-btn:hover {
-    background-color: #145dbf;
-}
-
-/* Container for category buttons */
-.category-buttons {
-    display: flex;
-    justify-content: center;    /* center them horizontally */
-    gap: 10px;
-    padding: 5px 10px;          /* tighter vertical padding */
-    margin-top: 50px;           /* distance from header */
-    margin-bottom: 5px;         /* small gap before feed */
+    padding: 5px 10px;
+    margin: 50px 0 5px; /* below header, above feed */
     width: 100%;
     box-sizing: border-box;
     background: #f0f2f5;
-}
-
-  
-  /* Individual category buttons */
+  }
   .category-button {
-    flex: 0 0 auto;
     background-color: #e4e6eb;
     border: none;
     border-radius: 20px;
@@ -233,23 +70,117 @@ button {
     white-space: nowrap;
     transition: background-color 0.2s;
   }
-  
   .category-button:hover {
     background-color: #d8dadf;
   }
-  
   .category-button.active {
     background-color: #1877f2;
     color: white;
   }
-
-/* Make .post positioned for overlays */
-.post {
-    position: relative;
-    overflow: hidden;
+  
+  /* ——— Feed container ——— */
+  #feed-container {
+    margin-top: 0; /* spacing now handled by category bar */
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;  /* <-- changed from center */
   }
   
-  /* Common overlay styling */
+  /* ——— Feed itself ——— */
+  #feed {
+    width: 100%;  /* span full width of feed-container */
+  }
+  
+  /* ——— Post card ——— */
+  .post {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    text-align: left; /* inline and inline-block children start at left */
+  }
+  .post p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .post img {
+    max-width: 100%;
+    border-radius: 5px;
+    display: block;
+    margin: auto;
+  }
+  
+  /* ——— Fallback Like/Dislike buttons ——— */
+  .post .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    margin: 10px 0 0 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .like-btn,
+  .dislike-btn {
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  .like-btn:hover,
+  .dislike-btn:hover {
+    background-color: #145dbf;
+  }
+  
+  /* ——— Rating scale (1–5) ——— */
+  .post .rating-scale {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px 0 0 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .rating-question {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    color: #333;
+    text-align: left;
+    width: 100%;
+  }
+  .post .rating-scale > div {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    margin: 4px 0 0 0;
+  }
+  .rating-btn {
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .rating-btn:hover {
+    background-color: #145dbf;
+  }
+  
+  /* ——— Swipe overlays ——— */
   .overlay {
     position: absolute;
     top: 50%;
@@ -261,17 +192,74 @@ button {
     opacity: 0;
     pointer-events: none;
   }
-  
-  /* Left (dislike) */
+  .like-overlay {
+    right: 20px;
+    background: rgba(24,119,242,0.9);
+  }
   .dislike-overlay {
     left: 20px;
     background: rgba(220,53,69,0.9);
   }
   
-  /* Right (like) */
-  .like-overlay {
-    right: 20px;
-    background: rgba(24,119,242,0.9);
+  /* ——— Upload form ——— */
+  #upload-container {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+  }
+  input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background: white;
+    box-sizing: border-box;
+  }
+  .submit-button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+  .submit-button:hover {
+    background-color: #218838;
   }
   
+  /* ——— Base button styles ——— */
+  button {
+    font-family: inherit;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+  }
   

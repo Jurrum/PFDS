@@ -1,52 +1,43 @@
 // app/static/js/script.js
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Build category bar + initial feed
+    // Build categories + initial feed
     reloadCategories();
   
-    // Hook the upload form (AJAX + redirect)
+    // AJAX upload form (if present)
     const uploadForm = document.getElementById("uploadForm");
     if (uploadForm) {
-      uploadForm.addEventListener("submit", (e) => {
+      uploadForm.addEventListener("submit", e => {
         e.preventDefault();
-        const formData = new FormData(uploadForm);
-  
+        const fd = new FormData(uploadForm);
         fetch("/upload", {
           method: "POST",
           headers: { "X-Requested-With": "XMLHttpRequest" },
-          body: formData
+          body: fd
         })
-        .then(res => {
-          if (!res.ok) throw new Error("Upload failed");
-          return res.json();
+        .then(r => {
+          if (!r.ok) throw new Error("Upload failed");
+          return r.json();
         })
-        .then(() => { window.location.href = "/"; })
+        .then(() => window.location.href = "/")
         .catch(err => {
-          console.error("Upload error:", err);
-          alert("Could not upload post. Please try again.");
+          console.error(err);
+          alert("Could not upload post.");
         });
       });
     }
   });
   
-  /**
-   * Rebuilds the category‑pill bar (including the “+” icon),
-   * then does the initial loadFeed() once it’s ready.
-   */
   function reloadCategories() {
     const container = document.getElementById("categoryButtons");
-    container.innerHTML = "";  // clear out old pills
+    container.innerHTML = "";
   
     fetch("/categories")
-      .then(res => res.json())
+      .then(r => r.json())
       .then(cats => {
-        // “All” pill
         container.appendChild(makePill("", "All"));
-  
-        // existing categories
         cats.forEach(c => container.appendChild(makePill(c.id, c.name)));
   
-        // “+” button for adding a new category
         const plus = document.createElement("button");
         plus.className = "category-button add-cat-icon";
         plus.textContent = "+";
@@ -54,48 +45,39 @@ document.addEventListener("DOMContentLoaded", () => {
         plus.addEventListener("click", showAddCategoryInput);
         container.appendChild(plus);
   
-        // pill click = filter feed
         container.querySelectorAll(".cat-pill").forEach(btn => {
           btn.addEventListener("click", () => {
             container.querySelectorAll(".cat-pill").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-  
             const name = btn.dataset.name;
-            const query = btn.dataset.id === ""
-              ? ""
-              : `?category=${encodeURIComponent(name)}`;
-            loadFeed(query);
+            const q = btn.dataset.id === "" ? "" : `?category=${encodeURIComponent(name)}`;
+            loadFeed(q);
           });
         });
   
-        // initial feed load
+        // initial load
         const active = container.querySelector(".cat-pill.active");
-        const qs = active.dataset.id === ""
-          ? ""
+        const q = active.dataset.id === "" 
+          ? "" 
           : `?category=${encodeURIComponent(active.dataset.name)}`;
-        loadFeed(qs);
+        loadFeed(q);
       })
       .catch(err => {
-        console.error("Could not load categories:", err);
+        console.error(err);
         loadFeed();
       });
   }
   
-  /** Injects the “new category” input + confirm button inline. */
   function showAddCategoryInput(e) {
     const plusBtn = e.currentTarget;
     const container = plusBtn.parentNode;
-  
-    // if already showing, bail
     if (container.querySelector("#newCategory")) return;
   
-    // create the text input
     const input = document.createElement("input");
     input.id = "newCategory";
     input.placeholder = "New category…";
-    input.style.cssText = "padding:4px;border-radius:4px;border:1px solid #ccc;margin-left:6px;";
+    input.style.cssText = "padding:4px;border:1px solid #ccc;border-radius:4px;margin-left:6px;";
   
-    // create the confirm button
     const confirm = document.createElement("button");
     confirm.textContent = "Add";
     confirm.style.cssText = "margin-left:6px;padding:4px 8px;border-radius:4px;";
@@ -114,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
         reloadCategories();
       })
       .catch(err => {
-        console.error("Add category failed:", err);
+        console.error(err);
         alert("Failed to add category: " + err.message);
       });
     });
@@ -123,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
     input.focus();
   }
   
-  /** Builds a single category‑pill button. */
   function makePill(id, label) {
     const btn = document.createElement("button");
     btn.className = `category-button cat-pill${id === "" ? " active" : ""}`;
@@ -133,121 +114,138 @@ document.addEventListener("DOMContentLoaded", () => {
     return btn;
   }
   
-  /**
-   * Fetches posts (optionally filtered) and renders them,
-   * wiring up both button‐based and swipe‐based like/dislike.
-   */
   function loadFeed(query = "") {
     fetch("/get_posts" + query)
-      .then(res => res.json())
+      .then(r => r.json())
       .then(posts => {
-        console.log("Feed data:", posts);
         const feed = document.getElementById("feed");
         feed.innerHTML = "";
   
         posts.forEach(post => {
-          // build the card
+          // create post card
           const postEl = document.createElement("div");
           postEl.className = "post";
   
           if (post.text)  postEl.innerHTML += `<p>${post.text}</p>`;
           if (post.image) postEl.innerHTML += `<img src="${post.image}" alt="Post Image">`;
   
-          // like/dislike buttons fallback
-          postEl.innerHTML += `
-            <div class="actions">
-              <button class="like-btn"    data-id="${post.id}">👍 ${post.likes || 0}</button>
-              <button class="dislike-btn" data-id="${post.id}">👎 ${post.dislikes || 0}</button>
-            </div>
-          `;
+          // actions: like + dislike buttons
+          const actions = document.createElement("div");
+          actions.className = "actions";
+          const likeBtn    = document.createElement("button");
+          likeBtn.className    = "like-btn";
+          likeBtn.textContent  = "👍";
+          const dislikeBtn = document.createElement("button");
+          dislikeBtn.className = "dislike-btn";
+          dislikeBtn.textContent = "👎";
+          actions.append(likeBtn, dislikeBtn);
+          postEl.appendChild(actions);
   
-          // create swipe overlays
-          const likeOverlay    = document.createElement("div");
-          likeOverlay.className    = "overlay like-overlay";
-          likeOverlay.textContent  = "👍 Like";
-          postEl.appendChild(likeOverlay);
+          // rating scale (hidden)
+          const ratingScale = document.createElement("div");
+          ratingScale.className = "rating-scale";
+          ratingScale.style.display = "none";
   
-          const dislikeOverlay = document.createElement("div");
-          dislikeOverlay.className = "overlay dislike-overlay";
-          dislikeOverlay.textContent = "💔 Dislike";
-          postEl.appendChild(dislikeOverlay);
+          const question = document.createElement("p");
+          question.className = "rating-question";
+          question.style.margin = "0 0 8px";
+          ratingScale.appendChild(question);
   
-          // attach swipe behavior via Hammer.js
+          const scaleRow = document.createElement("div");
+          [1,2,3,4,5].forEach(n => {
+            const btn = document.createElement("button");
+            btn.className = "rating-btn";
+            btn.textContent = n;
+            btn.dataset.id    = post.id;
+            btn.dataset.value = n;
+            scaleRow.appendChild(btn);
+          });
+          ratingScale.appendChild(scaleRow);
+          postEl.appendChild(ratingScale);
+  
+          // swipe overlays
+          const likeOv    = document.createElement("div");
+          likeOv.className    = "overlay like-overlay";
+          likeOv.textContent  = "❤️ Like";
+          const dislikeOv = document.createElement("div");
+          dislikeOv.className = "overlay dislike-overlay";
+          dislikeOv.textContent = "💔 Dislike";
+          postEl.append(likeOv, dislikeOv);
+  
+          // open rating on click
+          likeBtn.addEventListener("click", () => {
+            question.textContent = "How much do you like this content?";
+            actions.style.display      = "none";
+            ratingScale.style.display  = "flex";
+            ratingScale.dataset.type   = "like";
+          });
+          dislikeBtn.addEventListener("click", () => {
+            question.textContent = "How much do you dislike this content?";
+            actions.style.display      = "none";
+            ratingScale.style.display  = "flex";
+            ratingScale.dataset.type   = "dislike";
+          });
+  
+          // handle rating selection
+          scaleRow.querySelectorAll(".rating-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              const id   = btn.dataset.id;
+              const val  = parseInt(btn.dataset.value, 10);
+              const type = ratingScale.dataset.type;  // "like" or "dislike"
+  
+              fetch(`/posts/${id}/rate`, {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ value: val })
+              })
+              .then(() => {
+                // show chosen rating on a single button
+                const symbol   = type === "like" ? "👍" : "👎";
+                const btnClass = type === "like" ? "like-btn" : "dislike-btn";
+                actions.innerHTML = `<button class="${btnClass}">${symbol} ${val}</button>`;
+  
+                // hide scale, show actions again
+                ratingScale.style.display = "none";
+                actions.style.display     = "flex";
+              })
+              .catch(console.error);
+            });
+          });
+  
+          // swipe to rate = 3
           const hammer = new Hammer(postEl);
           hammer.get("pan").set({ direction: Hammer.DIRECTION_HORIZONTAL });
           hammer.on("pan", ev => {
-            // move card
             postEl.style.transform = `translateX(${ev.deltaX}px)`;
-            // show appropriate overlay
-            if (ev.deltaX > 0) {
-              likeOverlay.style.opacity    = Math.min(ev.deltaX / 100, 1);
-              dislikeOverlay.style.opacity = 0;
-            } else {
-              dislikeOverlay.style.opacity = Math.min(-ev.deltaX / 100, 1);
-              likeOverlay.style.opacity    = 0;
-            }
+            likeOv.style.opacity    = ev.deltaX > 0 ? Math.min(ev.deltaX/100,1) : 0;
+            dislikeOv.style.opacity = ev.deltaX < 0 ? Math.min(-ev.deltaX/100,1) : 0;
           });
-  
           hammer.on("panend", ev => {
-            const threshold = 100;
-            // Like
-            if (ev.deltaX > threshold) {
-              // animate out
-              postEl.style.transition = "transform 0.2s ease-out, opacity 0.2s";
-              postEl.style.transform  = "translateX(100%)";
+            const thr = 100;
+            if (Math.abs(ev.deltaX) > thr) {
+              postEl.style.transition = "transform .2s ease-out, opacity .2s";
+              postEl.style.transform  = ev.deltaX>0 ? "translateX(100%)" : "translateX(-100%)";
               postEl.style.opacity    = "0";
               setTimeout(() => {
-                fetch(`/posts/${post.id}/like`, { method: "POST" })
-                  .catch(console.error);
+                fetch(`/posts/${post.id}/rate`, {
+                  method: "POST",
+                  headers: {"Content-Type":"application/json"},
+                  body: JSON.stringify({ value: 3 })
+                }).catch(console.error);
                 postEl.remove();
               }, 200);
-  
-            // Dislike
-            } else if (ev.deltaX < -threshold) {
-              postEl.style.transition = "transform 0.2s ease-out, opacity 0.2s";
-              postEl.style.transform  = "translateX(-100%)";
-              postEl.style.opacity    = "0";
-              setTimeout(() => {
-                fetch(`/posts/${post.id}/dislike`, { method: "POST" })
-                  .catch(console.error);
-                postEl.remove();
-              }, 200);
-  
-            // Revert
             } else {
-              postEl.style.transition = "transform 0.2s ease-out";
+              postEl.style.transition = "transform .2s ease-out";
               postEl.style.transform  = "";
-              likeOverlay.style.opacity    = 0;
-              dislikeOverlay.style.opacity = 0;
+              likeOv.style.opacity = dislikeOv.style.opacity = 0;
               postEl.addEventListener("transitionend", () => {
                 postEl.style.transition = "";
               }, { once: true });
             }
           });
   
-          // append to feed
           feed.appendChild(postEl);
         });
-  
-        // also bind click handlers as fallback
-        document.querySelectorAll(".like-btn").forEach(btn =>
-          btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            fetch(`/posts/${id}/like`, { method: "POST" })
-              .then(r => r.json())
-              .then(d => btn.textContent = `👍 ${d.likes}`)
-              .catch(console.error);
-          })
-        );
-        document.querySelectorAll(".dislike-btn").forEach(btn =>
-          btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            fetch(`/posts/${id}/dislike`, { method: "POST" })
-              .then(r => r.json())
-              .then(d => btn.textContent = `👎 ${d.dislikes}`)
-              .catch(console.error);
-          })
-        );
       })
       .catch(err => console.error("Error loading feed:", err));
   }
