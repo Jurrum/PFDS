@@ -242,4 +242,36 @@ button {
     background-color: #1877f2;
     color: white;
   }
+
+/* Make .post positioned for overlays */
+.post {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Common overlay styling */
+  .overlay {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    color: white;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  /* Left (dislike) */
+  .dislike-overlay {
+    left: 20px;
+    background: rgba(220,53,69,0.9);
+  }
+  
+  /* Right (like) */
+  .like-overlay {
+    right: 20px;
+    background: rgba(24,119,242,0.9);
+  }
+  
   
