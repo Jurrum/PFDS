@@ -8,10 +8,16 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <header>
-    <h1>Social Media Feed</h1>
-    <a href="{{ url_for('main.upload') }}" class="upload-button">+ Create Post</a>
-  </header>
+    <header>
+        <h1>Social Media Feed</h1>
+        <a href="{{ url_for('main.upload') }}" class="upload-button">+ Create Post</a>
+
+      </header>
+      
+<!-- Category buttons go here -->
+<div id="categoryButtons" class="category-buttons"></div>
+
+  
 
   <div id="feed-container">
     <!-- client‑rendered posts go here -->

@@ -51,7 +51,7 @@ header h1 {
 
 /* Feed container */
 #feed-container {
-    margin-top: 80px; /* Prevents posts from hiding behind the fixed header */
+    margin-top: 5 px; /* Prevents posts from hiding behind the fixed header */
     width: 100%;
     max-width: 600px;
     display: flex;
@@ -171,7 +171,7 @@ input[type="file"] {
 /* ——— Button base styles ——— */
 button {
     font-family: inherit;
-    font-size: 16px;
+    font-size: 12px;
     transition: background-color 0.2s ease;
 }
 
@@ -206,3 +206,39 @@ button {
     background-color: #145dbf;
 }
 
+/* Container for category buttons */
+.category-buttons {
+    display: flex;
+    justify-content: center;    /* center them horizontally */
+    gap: 10px;
+    padding: 5px 10px;          /* tighter vertical padding */
+    margin-top: 50px;           /* distance from header */
+    margin-bottom: 5px;         /* small gap before feed */
+    width: 100%;
+    box-sizing: border-box;
+    background: #f0f2f5;
+}
+
+  
+  /* Individual category buttons */
+  .category-button {
+    flex: 0 0 auto;
+    background-color: #e4e6eb;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+  }
+  
+  .category-button:hover {
+    background-color: #d8dadf;
+  }
+  
+  .category-button.active {
+    background-color: #1877f2;
+    color: white;
+  }
+  

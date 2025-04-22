@@ -133,3 +133,8 @@ def dislike_post(post_id):
     db.session.commit()
     return jsonify({"id": post.id, "dislikes": post.dislikes}), 200
 
+@main.route('/categories')
+def get_categories():
+    """Return a list of all distinct content categories."""
+    cats = [row[0] for row in db.session.query(Content.category).distinct().all()]
+    return jsonify(cats)
