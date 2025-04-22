@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF‑8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create a Post</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -14,10 +14,16 @@
   </header>
 
   <div id="upload-container">
-    <form id="uploadForm" enctype="multipart/form-data">
+    <!-- Notice method="post" and enctype here: -->
+    <form 
+      id="uploadForm" 
+      action="{{ url_for('main.upload') }}" 
+      method="post" 
+      enctype="multipart/form-data"
+    >
       <div class="form-group">
         <label for="text">Write something:</label><br>
-        <textarea name="text" id="text" rows="4" placeholder="What’s on your mind?"></textarea>
+        <textarea name="text" id="text" rows="4" placeholder="What's on your mind?"></textarea>
       </div>
 
       <div class="form-group">
@@ -29,7 +35,7 @@
         <label for="category">Category:</label><br>
         <select name="category" id="category">
           {% for c in categories %}
-            <option value="{{ c }}" {% if c == 'General' %}selected{% endif %}>{{ c }}</option>
+            <option value="{{ c }}" {% if c=='General' %}selected{% endif %}>{{ c }}</option>
           {% endfor %}
           <option value="General">General</option>
         </select>
@@ -39,6 +45,7 @@
     </form>
   </div>
 
+  <!-- Keep this at the very bottom so uploadForm exists when script runs -->
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

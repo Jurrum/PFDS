@@ -16,8 +16,10 @@ def create_app():
     # ---- Make sure your models are imported before you create tables ----
     # this causes SQLAlchemy to register the Content class (and any others)
     from app.models.content import Content
+    from app.models.category import Category    
 
     # Automatically create any missing tables
+    
     with app.app_context():
         db.create_all()
 

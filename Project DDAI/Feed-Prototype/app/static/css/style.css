@@ -16,7 +16,7 @@ header {
     color: white;
     padding: 10px 0;
     text-align: center;
-    font-size: 22px;
+    font-size: 16px;
     font-weight: bold;
     position: fixed;
     top: 0;
@@ -33,6 +33,7 @@ header h1 {
 
 /* Back button */
 .upload-button, .back-button {
+    font: 12px;
     position: absolute;
     left: 10px;
     top: 50%;
