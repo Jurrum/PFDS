@@ -1,52 +1,74 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     loadFeed();
-
-    document.getElementById("uploadForm")?.addEventListener("submit", function (e) {
+  
+    const uploadForm = document.getElementById("uploadForm");
+    if (uploadForm) {
+      uploadForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        let formData = new FormData(this);
-
+  
+        const formData = new FormData(uploadForm);
+  
         fetch("/upload", {
-            method: "POST",
-            body: formData
+          method: "POST",
+          body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.error) {
-                console.log("Post saved:", data);
-                window.location.href = "/"; // Redirect to home after posting
-            }
-        })
-        .catch(error => console.error("Error:", error));
-    });
-});
-
-function loadFeed() {
+          .then(res => {
+            if (!res.ok) throw new Error("Upload failed");
+            return res.json();
+          })
+          .then(data => {
+            console.log("Uploaded:", data);
+            // Go back to the feed and refresh it
+            window.location.href = "/";
+          })
+          .catch(err => {
+            console.error("Error uploading post:", err);
+            alert("Could not upload post. Please try again.");
+          });
+      });
+    }
+  });
+  
+  function loadFeed() {
     fetch("/get_posts")
-        .then(response => response.json())
-        .then(posts => {
-            console.log("Loaded posts:", posts);
-            
-            // Apply sophisticated recommendation algorithm
-            posts = recommendPosts(posts);
-            
-            const feed = document.getElementById("feed");
-            feed.innerHTML = "";
-            posts.forEach(post => {
-                let postElement = document.createElement("div");
-                postElement.className = "post";
-                if (post.text) postElement.innerHTML += `<p>${post.text}</p>`;
-                if (post.image) postElement.innerHTML += `<img src="${post.image}" alt="Post Image">`;
-                feed.appendChild(postElement);
-            });
-        })
-        .catch(error => console.error("Error:", error));
-}
-
-function recommendPosts(posts) {
-    // More sophisticated recommendation logic
-    return posts.sort((a, b) => {
-        let aScore = (a.likes || 0) * 2 + (a.shares || 0) * 3 + (a.comments || 0) * 1.5;
-        let bScore = (b.likes || 0) * 2 + (b.shares || 0) * 3 + (b.comments || 0) * 1.5;
-        return bScore - aScore;
-    });
-}
+      .then(res => res.json())
+      .then(posts => {
+        const feed = document.getElementById("feed");
+        feed.innerHTML = "";
+  
+        posts.forEach(post => {
+          const postEl = document.createElement("div");
+          postEl.className = "post";
+  
+          if (post.text) postEl.innerHTML += `<p>${post.text}</p>`;
+          if (post.image) postEl.innerHTML += `<img src="${post.image}" alt="Post Image">`;
+  
+          postEl.innerHTML += `
+            <div class="actions">
+              <button class="like-btn" data-id="${post.id}">👍 ${post.likes || 0}</button>
+              <button class="dislike-btn" data-id="${post.id}">👎 ${post.dislikes || 0}</button>
+            </div>
+          `;
+  
+          feed.appendChild(postEl);
+        });
+  
+        // attach handlers after DOM insertion
+        document.querySelectorAll('.like-btn').forEach(btn =>
+          btn.addEventListener('click', () => {
+            fetch(`/posts/${btn.dataset.id}/like`, { method: 'POST' })
+              .then(res => res.json())
+              .then(data => { btn.textContent = `👍 ${data.likes}`; });
+          })
+        );
+        document.querySelectorAll('.dislike-btn').forEach(btn =>
+          btn.addEventListener('click', () => {
+            fetch(`/posts/${btn.dataset.id}/dislike`, { method: 'POST' })
+              .then(res => res.json())
+              .then(data => { btn.textContent = `👎 ${data.dislikes}`; });
+          })
+        );
+      })
+      .catch(err => console.error("Error loading feed:", err));
+  }
+  

@@ -139,3 +139,70 @@ input[type="file"] {
 .submit-button:hover {
     background-color: #218838;
 }
+
+/* ——— Form tweaks ——— */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background: white;
+    box-sizing: border-box;
+}
+
+/* Ensure file input matches other fields */
+input[type="file"] {
+    padding: 8px;
+    font-size: 16px;
+}
+
+/* ——— Button base styles ——— */
+button {
+    font-family: inherit;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+/* Submit button already defined; ensure consistency */
+.submit-button {
+    /* you can keep green or switch to blue if you prefer */
+    background-color: #28a745;
+}
+.submit-button:hover {
+    background-color: #218838;
+}
+
+/* ——— Like/Dislike action buttons ——— */
+.actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.like-btn,
+.dislike-btn {
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.like-btn:hover,
+.dislike-btn:hover {
+    background-color: #145dbf;
+}
+
