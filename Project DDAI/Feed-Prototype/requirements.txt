@@ -6,4 +6,4 @@ python-dotenv==1.0.0         # to load .env config (e.g. API keys)
 openai==0.27.6               # for infinite‐scroll content generation
 gunicorn==21.2.0             # production WSGI server
 openai==0.27.0
-
+requests==2.31.0             # for API requests

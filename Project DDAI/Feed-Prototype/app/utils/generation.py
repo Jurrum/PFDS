@@ -3,8 +3,6 @@
 import os
 import openai
 
-# (If you prefer the “client” style you can also do `from openai import OpenAI` 
-#  and then `client = OpenAI()`—this uses the same underlying transport.)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def generate_texts(category: str | None, count: int = 3) -> list[str]:
