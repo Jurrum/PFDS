@@ -36,10 +36,6 @@
     topBar.id = "drag-top-bar";
     topBar.style.display = "none";       // hidden until drag starts
     topBar.innerHTML = `
-      <div class="top-drop unknown-zone">
-        <span class="icon">❓</span>
-        <span class="label">Don't know (3/5)</span>
-      </div>
       <div class="top-drop love-zone">
         <span class="icon">⭐️</span>
         <span class="label">Love this (5/5)</span>
@@ -93,7 +89,7 @@
               // Map zones → rating value
               const val = inLove  ? 5
                         : inHate  ? 1
-                        : /*unknown*/ 3;
+                        : /*default*/ 3;
 
               fetch(`/posts/${el.dataset.id}/rate`, {
                 method: "POST",

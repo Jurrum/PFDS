@@ -140,11 +140,23 @@ function loadFeed(query = "") {
 }
 
 function createPostElement(post) {
-  const feed = document.getElementById("feed");
   const postEl = document.createElement("div");
   postEl.className = "post";
   postEl.dataset.id = post.id;
-  postEl.draggable = true;
+  postEl.dataset.category = post.category;
+  postEl.addEventListener('mouseenter', () => {
+    viewStartTime = Date.now();
+  });
+  postEl.addEventListener('mouseleave', () => {
+    if (viewStartTime) {
+      const viewTime = (Date.now() - viewStartTime) / 1000;  // Convert to seconds
+      fetch(`/posts/${post.id}/view_time`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ view_time: viewTime })
+      }).catch(console.error);
+    }
+  });
 
   // text + image
   if (post.text)  postEl.innerHTML += `<p>${post.text}</p>`;
@@ -213,6 +225,7 @@ function createPostElement(post) {
       const id   = b.dataset.id;
       const val  = parseInt(b.dataset.value, 10);
       const type = ratingScale.dataset.type;
+      const isPositive = type === "like";
 
       fetch(`/posts/${id}/rate`, {
         method: "POST",
@@ -220,11 +233,30 @@ function createPostElement(post) {
         body: JSON.stringify({ value: val })
       })
       .then(() => {
+        // Update user preferences for this category
+        fetch(`/user/preferences/${post.category}`, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ rating: val, is_positive: isPositive })
+        }).catch(console.error);
+
         const sym = type === "like" ? "👍" : "👎";
         actions.innerHTML = `<button class="${type}-btn">${sym} ${val}</button>`;
         ratingScale.style.display = "none";
         actions.style.display     = "flex";
         showFeedback(`You rated this ${type} ${val}/5`, "success");
+        
+        // Remove the post from the DOM before refreshing
+        postEl.remove();
+        
+        // Refresh the feed to show the updated order
+        const activeCat = document.querySelector(".cat-pill.active");
+        if (activeCat) {
+          const query = activeCat.dataset.name;
+          loadFeed(query);
+        } else {
+          loadFeed();
+        }
       })
       .then(() => maybeGenerate())
       .catch(console.error);
@@ -245,16 +277,42 @@ function createPostElement(post) {
       postEl.style.transition = "transform .2s ease-out, opacity .2s";
       postEl.style.transform  = ev.deltaX>0 ? "translateX(100%)" : "translateX(-100%)";
       postEl.style.opacity    = "0";
+      
+      // Create a clone to keep the post in the feed while rating
+      const postClone = postEl.cloneNode(true);
+      postClone.style.display = 'none';
+      postEl.parentNode.insertBefore(postClone, postEl);
+      
       setTimeout(() => {
+        const rating = ev.deltaX > 0 ? 5 : 1; // 5 for like (right), 1 for dislike (left)
         fetch(`/posts/${post.id}/rate`, {
           method: "POST",
           headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ value: 3 })
+          body: JSON.stringify({ value: rating })
+        })
+        .then(() => {
+          // Remove the original post first
+          postEl.remove();
+          
+          // Update the clone with the new rating
+          const ratingBtn = document.createElement('button');
+          ratingBtn.className = ev.deltaX > 0 ? 'like-btn' : 'dislike-btn';
+          ratingBtn.textContent = ev.deltaX > 0 ? '👍' : '👎';
+          ratingBtn.title = `${rating}/5`;
+          postClone.querySelector('.actions').innerHTML = ratingBtn.outerHTML;
+          
+          // Refresh the feed to show the updated order
+          const activeCat = document.querySelector(".cat-pill.active");
+          if (activeCat) {
+            const query = activeCat.dataset.name;
+            loadFeed(query);
+          } else {
+            loadFeed();
+          }
         })
         .catch(console.error)
         .finally(() => {
-          postEl.remove();
-          showFeedback("You swiped—rated 3/5!", "info");
+          showFeedback(`You swiped—rated ${rating}/5!`, "info");
           maybeGenerate();
         });
       }, 200);
@@ -302,28 +360,62 @@ function createPostElement(post) {
 }
 
 function maybeGenerate() {
+  // Get the active category
+  const active = document.querySelector(".cat-pill.active");
+  const cat = active?.dataset.name || null;
+
+  // Reset rating count if no category is active
+  if (!active) {
+    localStorage.setItem("ratingCount", "0");
+    return;
+  }
+
+  // Increment rating count
   let count = parseInt(localStorage.getItem("ratingCount") || "0", 10) + 1;
   localStorage.setItem("ratingCount", count);
+
+  // Only generate if we've reached the threshold
   if (count % 3 !== 0) return;
 
-  const active = document.querySelector(".cat-pill.active");
-  const cat    = active?.dataset.name || null;
-
+  // Make the generation request
   fetch("/generate", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ category: cat, count: 3 })
   })
   .then(res => {
-    if (!res.ok) throw new Error("Generation failed");
+    if (!res.ok) {
+      throw new Error("Generation failed: " + res.statusText);
+    }
     return res.json();
   })
   .then(newPosts => {
-    newPosts.forEach(p => document.getElementById("feed")
-      .appendChild(createPostElement(p)));
-    showFeedback(`3 new ${cat||'general'} posts generated`, "success");
+    if (!newPosts || !newPosts.length) {
+      console.warn("No new posts generated");
+      return;
+    }
+    
+    // Add new posts to the feed
+    const feed = document.getElementById("feed");
+    if (!feed) {
+      console.error("Feed container not found");
+      return;
+    }
+    
+    newPosts.forEach(post => {
+      const postEl = createPostElement(post);
+      if (postEl) {
+        feed.appendChild(postEl);
+      }
+    });
+    
+    // Show success message
+    showFeedback(`3 new ${cat || 'general'} posts generated`, "success");
   })
-  .catch(err => console.error(err));
+  .catch(err => {
+    console.error("Error generating posts:", err);
+    showFeedback("Failed to generate new posts", "error");
+  });
 }
 
 function sendReorder() {
@@ -338,7 +430,27 @@ function sendReorder() {
     headers: { "Content-Type":"application/json" },
     body: JSON.stringify({ order, category })
   })
-  .catch(console.error);
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("Failed to reorder posts");
+    }
+    return res.json();
+  })
+  .then(() => {
+    // Refresh the feed after successful reorder
+    const activeCat = document.querySelector(".cat-pill.active");
+    if (activeCat) {
+      const query = activeCat.dataset.name;
+      loadFeed(query);
+    } else {
+      loadFeed();
+    }
+    showFeedback("Feed reordered", "success");
+  })
+  .catch(err => {
+    console.error("Error reordering posts:", err);
+    showFeedback("Failed to reorder posts", "error");
+  });
 }
 
 // ——— Feedback “toaster” ———

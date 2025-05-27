@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 from app import db
 from app.models.content import Content
 from app.models.category import Category
-from app.models.rating import Rating  # if using a separate Rating model
+from app.models.rating import Rating
 from app.utils.generation import generate_texts
 
 main = Blueprint('main', __name__)
@@ -100,7 +100,23 @@ def get_posts():
     except ValueError:
         limit, offset = 50, 0
 
+    # Get posts
     posts = q.offset(offset).limit(limit).all()
+    
+    # Apply saved manual order
+    order_key = f"order:{cat or 'all'}"
+    saved = session.get(order_key)
+    if saved:
+        id_map = {p.id: p for p in posts}
+        ordered = []
+        for pid in saved:
+            if pid in id_map:
+                ordered.append(id_map.pop(pid))
+        ordered.extend(id_map.values())
+        posts = ordered
+    else:
+        # Sort posts by creation date (newest first) if no manual order
+        posts.sort(key=lambda p: p.created_at, reverse=True)
 
     # if no posts on first page, generate some
     if offset == 0 and not posts:
@@ -127,18 +143,6 @@ def get_posts():
             p.dislikes * weights['dislikes']
         )
     posts.sort(key=score, reverse=True)
-
-    # apply saved manual order
-    order_key = f"order:{cat or 'all'}"
-    saved = session.get(order_key)
-    if saved:
-        id_map = {p.id: p for p in posts}
-        ordered = []
-        for pid in saved:
-            if pid in id_map:
-                ordered.append(id_map.pop(pid))
-        ordered.extend(id_map.values())
-        posts = ordered
 
     return jsonify([p.to_dict() for p in posts])
 
@@ -197,8 +201,43 @@ def rate_post(post_id):
     val = data.get('value')
     if not isinstance(val, int) or not (1 <= val <= 5):
         return jsonify({"error":"Rating must be 1–5"}), 400
+    
+    # Update post ratings
     post.rating_total += val
     post.rating_count += 1
+    
+    # Commit the rating update
+    db.session.commit()
+    
+    return jsonify({"id": post.id, "rating": post.rating_total/post.rating_count}), 200
+
+@main.route('/user/preferences/<category>', methods=['POST'])
+def update_user_preference(category):
+    """
+    Update user preferences for a specific category based on their ratings.
+    """
+    session_id = request.cookies.get('session_id', '')
+    if not session_id:
+        return jsonify({"error": "No session ID"}), 400
+    
+    data = request.get_json(force=True)
+    rating = data.get('rating')
+    is_positive = data.get('is_positive', False)
+    
+    if not isinstance(rating, int) or not (1 <= rating <= 5):
+        return jsonify({"error": "Invalid rating"}), 400
+    
+    # Get or create user preference
+    pref = UserPreference.query.filter_by(session_id=session_id, category=category).first()
+    if not pref:
+        pref = UserPreference(session_id=session_id, category=category)
+        db.session.add(pref)
+    
+    # Update preference
+    pref.update_preference(rating, is_positive)
+    db.session.commit()
+    
+    return jsonify(pref.to_dict()), 200
     db.session.commit()
     return jsonify({
         "average_rating": post.average_rating,
@@ -224,29 +263,57 @@ def debug_posts():
 
 @main.route('/generate', methods=['POST'])
 def generate_posts():
-    data = request.get_json(force=True)
-    category = data.get('category', None)
-    count = int(data.get('count', 3))
+    try:
+        data = request.get_json(force=True)
+        category = data.get('category', None)
+        count = int(data.get('count', 3))
+        
+        print(f"Generating {count} posts for category: {category}")
+        
+        # Get examples if they exist
+        q = Content.query
+        if category:
+            q = q.filter_by(category=category)
+        
+        # Get top-rated posts or any posts if none are rated
+        examples = (
+            q.filter(Content.rating_count > 0)
+             .order_by((Content.rating_total/Content.rating_count).desc())
+             .limit(3).all()
+        )
+        
+        # If no rated posts, fall back to any posts
+        if not examples:
+            examples = q.limit(3).all()
+        
+        example_texts = [p.text for p in examples if p.text]
+        
+        # Generate new posts
+        new_texts = generate_texts(category, count, examples=example_texts)
+        
+        if not new_texts or len(new_texts) < count:
+            print(f"Generated {len(new_texts) if new_texts else 0} posts, expected {count}")
+            return jsonify({"error": "Failed to generate enough posts"}), 500
 
-    # use top-rated examples
-    q = Content.query
-    if category:
-        q = q.filter_by(category=category)
-    examples = (
-        q.filter(Content.rating_count>0)
-         .order_by((Content.rating_total/Content.rating_count).desc())
-         .limit(3).all()
-    )
-    example_texts = [p.text for p in examples if p.text]
-
-    new_texts = generate_texts(category, count, examples=example_texts)
-    new_posts = []
-    for txt in new_texts:
-        p = Content(text=txt, category=category or 'General')
-        db.session.add(p)
-        new_posts.append(p)
-    db.session.commit()
-    return jsonify([p.to_dict() for p in new_posts]), 201
+        new_posts = []
+        for txt in new_texts:
+            if txt:  # Only add non-empty posts
+                p = Content(text=txt, category=category or 'General')
+                db.session.add(p)
+                new_posts.append(p)
+        
+        if not new_posts:
+            print("No valid posts generated")
+            return jsonify({"error": "Failed to generate valid posts"}), 500
+        
+        db.session.commit()
+        print(f"Successfully added {len(new_posts)} new posts")
+        return jsonify([p.to_dict() for p in new_posts]), 201
+    
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error in generate_posts route: {str(e)}")
+        return jsonify({"error": "Failed to generate posts"}), 500
 
 
 @main.route('/dashboard')
