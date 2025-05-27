@@ -128,6 +128,22 @@ def get_posts():
         return p.likes * 2 + p.shares * 3 + p.comments * 1.5 - p.dislikes
     posts.sort(key=score, reverse=True)
 
+    # 5a) Apply any manually‐saved order for this category
+    cat_key = request.args.get('category')
+    order_key = f"order:{cat_key or 'all'}"
+    saved = session.get(order_key)
+    if saved:
+        # map id→post, then re-assemble in saved order
+        id_map = {p.id: p for p in posts}
+        ordered = []
+        for pid in saved:
+            if pid in id_map:
+                ordered.append(id_map.pop(pid))
+        # append any new posts that weren't in saved list
+        ordered.extend(id_map.values())
+        posts = ordered
+
+
     # 6) Return JSON
     return jsonify([p.to_dict() for p in posts])
 
@@ -209,6 +225,19 @@ def rate_post(post_id):
         "average_rating": post.average_rating,
         "rating_count": post.rating_count
     }), 200
+
+@main.route('/posts/reorder', methods=['POST'])
+def reorder_posts():
+    """
+    Persist a user’s manual reordering of posts.
+    Expects JSON: { "order": [id1, id2, ...], "category": "<name>" }
+    """
+    data     = request.get_json(force=True)
+    order    = data.get("order", [])
+    category = data.get("category")
+    key = f"order:{category or 'all'}"
+    session[key] = order
+    return jsonify({"status":"ok"}), 200
 
 
 @main.route('/debug_posts')
