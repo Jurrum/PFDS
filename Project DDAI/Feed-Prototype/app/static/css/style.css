@@ -1,274 +1,340 @@
 /* ——— General page styles ——— */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  /* ——— Header ——— */
-  header {
-    width: 100%;
-    background-color: #1877f2;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  header h1 {
-    margin: 0;
-    font-size: 24px;
-  }
-  
-  /* ——— Create/Back buttons ——— */
-  .upload-button,
-  .back-button {
-    font-size: 12px;
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: white;
-    color: #1877f2;
-    padding: 8px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  .upload-button:hover,
-  .back-button:hover {
-    background-color: #eeeeee;
-  }
-  
-  /* ——— Category bar ——— */
-  .category-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 5px 10px;
-    margin: 50px 0 5px; /* below header, above feed */
-    width: 100%;
-    box-sizing: border-box;
-    background: #f0f2f5;
-  }
-  .category-button {
-    background-color: #e4e6eb;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 14px;
-    white-space: nowrap;
-    transition: background-color 0.2s;
-  }
-  .category-button:hover {
-    background-color: #d8dadf;
-  }
-  .category-button.active {
-    background-color: #1877f2;
-    color: white;
-  }
-  
-  /* ——— Feed container ——— */
-  #feed-container {
-    margin-top: 0; /* spacing now handled by category bar */
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;  /* <-- changed from center */
-  }
-  
-  /* ——— Feed itself ——— */
-  #feed {
-    width: 100%;  /* span full width of feed-container */
-  }
-  
-  /* ——— Post card ——— */
-  .post {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-    text-align: left; /* inline and inline-block children start at left */
-  }
-  .post p {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  .post img {
-    max-width: 100%;
-    border-radius: 5px;
-    display: block;
-    margin: auto;
-  }
-  
-  /* ——— Fallback Like/Dislike buttons ——— */
-  .post .actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-start;
-    margin: 10px 0 0 0;
-    padding: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .like-btn,
-  .dislike-btn {
-    background-color: #1877f2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  .like-btn:hover,
-  .dislike-btn:hover {
-    background-color: #145dbf;
-  }
-  
-  /* ——— Rating scale (1–5) ——— */
-  .post .rating-scale {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 10px 0 0 0;
-    padding: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .rating-question {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0 0 8px 0;
-    color: #333;
-    text-align: left;
-    width: 100%;
-  }
-  .post .rating-scale > div {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-start;
-    margin: 4px 0 0 0;
-  }
-  .rating-btn {
-    background-color: #1877f2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 6px 12px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  .rating-btn:hover {
-    background-color: #145dbf;
-  }
-  
-  /* ——— Swipe overlays ——— */
-  .overlay {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    padding: 6px 10px;
-    border-radius: 5px;
-    color: white;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .like-overlay {
-    right: 20px;
-    background: rgba(24,119,242,0.9);
-  }
-  .dislike-overlay {
-    left: 20px;
-    background: rgba(220,53,69,0.9);
-  }
-  
-  /* ——— Upload form ——— */
-  #upload-container {
-    margin-top: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-  form {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-  }
-  textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-  }
-  input[type="file"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    background: white;
-    box-sizing: border-box;
-  }
-  .submit-button {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-  }
-  .submit-button:hover {
-    background-color: #218838;
-  }
-  
-  /* ——— Base button styles ——— */
-  button {
-    font-family: inherit;
-    font-size: 12px;
-    transition: background-color 0.2s ease;
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  /* Drag & drop hint */
+/* ——— Header ——— */
+header {
+  width: 100%;
+  background-color: #1877f2;
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+/* ——— Create/Back buttons ——— */
+.upload-button,
+.back-button {
+  font-size: 12px;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  color: #1877f2;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.upload-button:hover,
+.back-button:hover {
+  background-color: #eeeeee;
+}
+
+/* ——— Category bar ——— */
+.category-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 5px 10px;
+  margin: 50px 0 5px; /* below header, above feed */
+  width: 100%;
+  box-sizing: border-box;
+  background: #f0f2f5;
+}
+.category-button {
+  background-color: #e4e6eb;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+.category-button:hover {
+  background-color: #d8dadf;
+}
+.category-button.active {
+  background-color: #1877f2;
+  color: white;
+}
+
+/* ——— Top‐bar for drag targets ——— */
+#drag-top-bar {
+  position: relative;         /* flow under category bar */
+  margin: 0 auto 20px;
+  width: 100%;
+  max-width: 600px;
+  display: none;              /* shown only while dragging */
+  justify-content: space-between;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  box-sizing: border-box;
+  z-index: 90;
+}
+#drag-top-bar .top-drop {
+  flex: 1;
+  text-align: center;
+  margin: 0 4px;
+  padding: 6px;
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  transition: background 0.2s, border-color 0.2s;
+}
+#drag-top-bar .top-drop .icon {
+  display: block;
+  font-size: 24px;
+}
+#drag-top-bar .top-drop .label {
+  display: block;
+  font-size: 12px;
+  margin-top: 4px;
+}
+#drag-top-bar .top-drop:hover {
+  background: #eee;
+  border-color: #888;
+}
+
+/* ——— Feed container ——— */
+#feed-container {
+  margin-top: 0; /* spacing by category bar */
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#feed {
+  width: 100%;
+}
+
+/* ——— Post card ——— */
+.post {
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+.post p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+.post img {
+  max-width: 100%;
+  border-radius: 5px;
+  display: block;
+  margin: auto;
+}
+
+/* ——— Fallback Like/Dislike buttons ——— */
+.post .actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  margin: 10px 0 0 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.like-btn,
+.dislike-btn {
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.like-btn:hover,
+.dislike-btn:hover {
+  background-color: #145dbf;
+}
+
+/* ——— Rating scale (1–5) ——— */
+.post .rating-scale {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 0 0 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.rating-question {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: #333;
+  text-align: left;
+  width: 100%;
+}
+.post .rating-scale > div {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  margin: 4px 0 0 0;
+}
+.rating-btn {
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.rating-btn:hover {
+  background-color: #145dbf;
+}
+
+/* ——— Swipe overlays ——— */
+.overlay {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+}
+.like-overlay {
+  right: 20px;
+  background: rgba(24,119,242,0.9);
+}
+.dislike-overlay {
+  left: 20px;
+  background: rgba(220,53,69,0.9);
+}
+
+/* ——— Upload form ——— */
+#upload-container {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+}
+input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background: white;
+  box-sizing: border-box;
+}
+.submit-button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+.submit-button:hover {
+  background-color: #218838;
+}
+
+/* ——— Base button styles ——— */
+button {
+  font-family: inherit;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+}
+
+/* ——— Drag hint ——— */
 .post.dragging {
   opacity: 0.5;
 }
 
-/* Feedback “toaster” container */
+/* ——— Drop‐zones ——— */
+.drop-zone {
+  pointer-events: none;
+}
+#star-zone,
+#trash-zone {
+  /* these can remain if you still use bottom/top drop zones */
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  padding: 8px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.9);
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 50;
+}
+#star-zone.active,
+#trash-zone.active {
+  opacity: 1;
+}
+#star-zone { top: 60px; }
+#trash-zone { bottom: 20px; }
+
+/* ——— Toaster feedback ——— */
 #feedbackContainer {
   position: fixed;
   top: 1rem;
@@ -278,8 +344,6 @@ body {
   flex-direction: column;
   gap: 0.5rem;
 }
-
-/* Individual messages */
 .feedback-message {
   padding: 10px 15px;
   border-radius: 5px;
@@ -288,20 +352,31 @@ body {
   opacity: 1;
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.feedback-message.info {
-  background: #1877f2;
-}
-.feedback-message.success {
-  background: #28a745;
-}
-.feedback-message.error {
-  background: #dc3545;
-}
-
-/* Animate hide */
+.feedback-message.info    { background: #1877f2; }
+.feedback-message.success { background: #28a745; }
+.feedback-message.error   { background: #dc3545; }
 .feedback-message.hide {
   opacity: 0;
   transform: translateY(-10px);
 }
 
-  
+/* ——— Toast popups ——— */
+#toast-container {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+.toast {
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 8px 12px;
+  margin-top: 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0;
+  animation: fadein 0.2s forwards, fadeout 0.5s 2.5s forwards;
+}
+@keyframes fadein  { to { opacity: 1; } }
+@keyframes fadeout { to { opacity: 0; } }

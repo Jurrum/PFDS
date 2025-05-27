@@ -1,45 +1,46 @@
-# app/utils/generation.py
-
 import os
 import openai
-from openai.error import AuthenticationError, OpenAIError
+from openai.error import OpenAIError
 
-# load_dotenv should already have run in app/__init__.py
 openai.api_key = os.getenv("OPENAI_API_KEY")
 if not openai.api_key:
-    raise RuntimeError("OPENAI_API_KEY not set in environment")
+    raise RuntimeError("OPENAI_API_KEY not set")
 
-def generate_texts(category: str | None, count: int = 3) -> list[str]:
+def generate_texts(
+    category: str | None,
+    count: int = 3,
+    examples: list[str] = None
+) -> list[str]:
     """
-    Generate `count` post ideas via gpt-3.5-turbo.
-    Raises if your key lacks chat scope.
+    Generate new posts via gpt-3.5-turbo, using `examples` as positive seeds.
     """
     system_msg = "You are a social-media content generator."
-    user_msg = (
-        f"Generate {count} brief social media post ideas"
-        + (f" about {category}." if category else " on general topics.")
-        + " Each should be 1–2 sentences."
-    )
+    user_msg = f"Generate {count} brief social media post ideas"
+    if category:
+        user_msg += f" about {category}"
+    user_msg += ", each 1–2 sentences."
+
+    if examples:
+        # include up to 3 top examples in the prompt
+        ex_text = "\n".join(f"- {ex}" for ex in examples[:3])
+        user_msg += f"\n\nHere are some posts the user liked:\n{ex_text}\n\nNow generate similar, fresh ideas."
 
     try:
         resp = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",  "content": system_msg},
-                {"role": "user",    "content": user_msg},
+                {"role": "system", "content": system_msg},
+                {"role": "user",   "content": user_msg},
             ],
             temperature=0.8,
             n=1,
         )
-    except AuthenticationError as e:
-        raise RuntimeError(
-            "Your OpenAI key cannot access chat.completions for gpt-3.5-turbo. "
-            "Please verify the key has the ‘chat.completions’ scope."
-        ) from e
+        text = resp.choices[0].message.content
     except OpenAIError as e:
-        raise RuntimeError(f"OpenAI error: {e}") from e
+        # fallback to stub so UI won’t crash
+        print("OpenAI error:", e)
+        return []
 
-    text = resp.choices[0].message.content
     return _split_lines(text, count)
 
 
@@ -49,7 +50,7 @@ def _split_lines(text: str, count: int) -> list[str]:
         line = line.strip()
         if not line:
             continue
-        # strip leading "1. " or "1) "
+        # drop leading list markers
         if len(line) > 1 and line[0].isdigit() and line[1] in (".", ")"):
             line = line[2:].strip()
         posts.append(line)
