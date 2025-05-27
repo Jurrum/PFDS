@@ -30,22 +30,23 @@
 
   // ——— On initial load, inject top bar + toast container ———
   document.addEventListener("DOMContentLoaded", () => {
-    // 1) Top-bar goes just beneath the category pills
+    // 1) Top bar beneath the category pills
     const catBar = document.getElementById("categoryButtons");
     window.topBar = document.createElement("div");
     topBar.id = "drag-top-bar";
+    topBar.style.display = "none";       // hidden until drag starts
     topBar.innerHTML = `
       <div class="top-drop unknown-zone">
         <span class="icon">❓</span>
-        <span class="label">Don't know</span>
+        <span class="label">Don't know (3/5)</span>
       </div>
       <div class="top-drop love-zone">
         <span class="icon">⭐️</span>
-        <span class="label">Love this</span>
+        <span class="label">Love this (5/5)</span>
       </div>
       <div class="top-drop hate-zone">
         <span class="icon">🗑️</span>
-        <span class="label">Hate this</span>
+        <span class="label">Hate this (1/5)</span>
       </div>
     `;
     catBar.after(topBar);
@@ -56,17 +57,17 @@
     document.body.appendChild(toastZone);
   });
 
-  // ——— Monkey-patch loadFeed to wire up Hammer.js interactions ———
+  // ——— Monkey‐patch loadFeed to wire up Hammer.js interactions ———
   if (typeof window.loadFeed === "function") {
     const originalLoad = window.loadFeed;
     window.loadFeed = (query = "") => {
       originalLoad(query);
 
-      // Wait until posts are rendered
+      // Wait until posts are rendered...
       setTimeout(() => {
         const feed = document.getElementById("feed");
         feed.querySelectorAll(".post").forEach(el => {
-          // Clean up old Hammer instance
+          // Destroy any old Hammer instance
           if (el._hammer) el._hammer.destroy();
 
           const hammer = new Hammer(el);
@@ -83,17 +84,17 @@
           });
 
           hammer.on("panend", ev => {
-            // Determine if released over one of the three zones
             const cx = ev.center.x, cy = ev.center.y;
             const inUnknown = hitTest(".unknown-zone", cx, cy);
             const inLove    = hitTest(".love-zone",    cx, cy);
             const inHate    = hitTest(".hate-zone",    cx, cy);
 
             if (inUnknown || inLove || inHate) {
-              // Map zones → rating
+              // Map zones → rating value
               const val = inLove  ? 5
                         : inHate  ? 1
                         : /*unknown*/ 3;
+
               fetch(`/posts/${el.dataset.id}/rate`, {
                 method: "POST",
                 headers: {"Content-Type":"application/json"},
@@ -101,21 +102,24 @@
               })
               .then(() => {
                 el.remove();
-                showToast(
-                  inLove  ? "⭐️ You loved it!"
-                  : inHate ? "🗑️ You hated it!"
-                  : "❓ You marked unknown!"
-                );
+                // Show the proper toast with numeric score
+                if (inLove) {
+                  showToast("⭐️ You loved it! (5/5)");
+                } else if (inHate) {
+                  showToast("🗑️ You hated it! (1/5)");
+                } else {
+                  showToast("❓ You marked unknown (3/5)");
+                }
                 persistOrder();
               })
               .catch(console.error);
 
             } else {
-              // Otherwise treat as manual reorder → persist new order
+              // Just a reorder
               persistOrder();
             }
 
-            // Reset transform and hide bar
+            // Reset transform & hide bar
             el.style.transition = "transform 0.2s ease-out";
             el.style.transform  = "";
             setTimeout(() => el.style.transition = "", 200);

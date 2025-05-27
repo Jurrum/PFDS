@@ -380,3 +380,57 @@ button {
 }
 @keyframes fadein  { to { opacity: 1; } }
 @keyframes fadeout { to { opacity: 0; } }
+
+
+/* Dashboard layout */
+#dashboard {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+#dashboard section {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+#dashboard h2 {
+  margin-top: 0;
+}
+#event-log {
+  list-style: none;
+  padding-left: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+#event-log li {
+  border-bottom: 1px solid #eee;
+  padding: 6px 0;
+  font-size: 14px;
+}
+.sliders label {
+  display: block;
+  margin: 10px 0 4px;
+}
+.sliders input[type="range"] {
+  width: 100%;
+}
+/* Top bar already in style.css under #drag-top-bar/.top-drop */
+
+.dashboard-button {
+  font-size: 12px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  color: #1877f2;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.dashboard-button:hover {
+  background-color: #eeeeee;
+}

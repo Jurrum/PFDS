@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feed Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- Chart.js for trend chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+  <header>
+    <h1>Feed Control Panel</h1>
+    <a href="{{ url_for('main.home') }}" class="back-button">← Back</a>
+  </header>
+
+  <div class="category-buttons"><!-- reuse your bar styling to spacer --></div>
+
+  <!-- Top‐bar under categories -->
+  <div id="drag-top-bar">
+    <div class="top-drop" data-action="hate">
+      <span class="icon">🗑️</span>
+      <span class="label">Hate this</span>
+    </div>
+    <div class="top-drop" data-action="unknown">
+      <span class="icon">❓</span>
+      <span class="label">Unsure</span>
+    </div>
+    <div class="top-drop" data-action="love">
+      <span class="icon">⭐️</span>
+      <span class="label">Love this</span>
+    </div>
+  </div>
+
+  <main id="dashboard">
+    <!-- 1) Interaction Log -->
+    <section>
+      <h2>Recent Interactions</h2>
+      <ul id="event-log"></ul>
+    </section>
+
+    <!-- 2) Trend Chart -->
+    <section>
+      <h2>Average Rating by Category</h2>
+      <canvas id="trendChart"></canvas>
+    </section>
+
+    <!-- 3) Algorithm Weights -->
+    <section>
+      <h2>Tune Recommendation Weights</h2>
+      <div class="sliders">
+        {% for key,val in weights.items() %}
+        <label>{{ key.capitalize() }}: <span id="{{key}}-val">{{ val }}</span></label>
+        <input type="range" min="0" max="5" step="0.1"
+               id="{{key}}-slider" value="{{ val }}">
+        {% endfor %}
+      </div>
+      <button id="save-settings">Save Settings</button>
+      <div id="settings-msg" class="feedback-message info hide"></div>
+    </section>
+  </main>
+
+  <script>
+    // bootstrap data from flask into JS variables
+    const EVENTS = {{ events|safe }};
+    const TRENDS = {{ trends|safe }};
+  </script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
