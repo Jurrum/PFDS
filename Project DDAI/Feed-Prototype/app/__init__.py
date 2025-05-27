@@ -25,6 +25,7 @@ def create_app():
     # import models so tables get created
     from app.models.content  import Content
     from app.models.category import Category
+    from app.models.session import UserSession
     from app.models.rating   import Rating
 
     with app.app_context():

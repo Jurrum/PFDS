@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed Study - Session Complete</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            text-align: center;
+        }
+        .summary {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        .new-session-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+        .new-session-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thank you for participating!</h1>
+    
+    <div class="summary">
+        <h2>Session Summary</h2>
+        <p>Your session has been successfully completed.</p>
+        <p>All your interactions have been saved for research purposes.</p>
+    </div>
+
+    <a href="{{ url_for('main.start') }}" class="new-session-btn">Start Another Session</a>
+</body>
+</html>

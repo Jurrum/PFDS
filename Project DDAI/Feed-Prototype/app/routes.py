@@ -3,15 +3,17 @@ import json
 from flask import (
     Blueprint, render_template, request,
     jsonify, send_from_directory,
-    url_for, redirect, session
+    url_for, redirect, session as flask_session, current_app
 )
 from werkzeug.utils import secure_filename
-
 from app import db
 from app.models.content import Content
 from app.models.category import Category
 from app.models.rating import Rating
+from app.models.session import UserSession
 from app.utils.generation import generate_texts
+from app.utils.user_logging import user_logger
+from datetime import datetime
 
 main = Blueprint('main', __name__)
 
@@ -38,8 +40,53 @@ def allowed_file(filename):
 
 
 # ——— Routes ———
+@main.route('/start')
+def start():
+    """Show the start page with instructions."""
+    return render_template('start.html')
+
+@main.route('/start-session', methods=['POST'])
+def start_session():
+    """Start a new user session."""
+    # Get username from form data
+    username = request.form.get('username')
+    
+    if not username:
+        return redirect(url_for('main.start'))
+
+    # Check if username already exists
+    existing_session = UserSession.query.filter_by(username=username).first()
+    if existing_session:
+        # If session exists but is not completed, redirect to home
+        if not existing_session.completed:
+            flask_session['user_session_id'] = existing_session.id
+            flask_session['username'] = username
+            return redirect(url_for('main.index'))
+        # If session exists and is completed, redirect back to start
+        return redirect(url_for('main.start'))
+
+    # Create new session
+    user_session = UserSession(username=username)
+    db.session.add(user_session)
+    db.session.commit()
+
+    # Store session ID in Flask session
+    flask_session['user_session_id'] = user_session.id
+    flask_session['username'] = username
+
+    # Initialize logging
+    user_logger.init_participant(username)
+    
+    # Start interaction timer
+    flask_session['interaction_start'] = datetime.utcnow()
+
+    # Redirect to home page
+    return redirect(url_for('main.index'))
+
+
+
 @main.route('/')
-def home():
+def index():
     """Render the home page; posts fetched via JS."""
     return render_template('home.html')
 
@@ -105,7 +152,7 @@ def get_posts():
     
     # Apply saved manual order
     order_key = f"order:{cat or 'all'}"
-    saved = session.get(order_key)
+    saved = flask_session.get(order_key)
     if saved:
         id_map = {p.id: p for p in posts}
         ordered = []
@@ -134,7 +181,7 @@ def get_posts():
         db.session.commit()
 
     # dynamic scoring
-    weights = session.get('weights', DEFAULT_WEIGHTS)
+    weights = flask_session.get('weights', DEFAULT_WEIGHTS)
     def score(p):
         return (
             p.likes    * weights['likes'] +
@@ -191,6 +238,7 @@ def update_post_category(post_id):
         return jsonify({"error":"Invalid category"}), 400
     post.category = cat.name
     db.session.commit()
+    user_logger.log_interaction(post_id, 'category_update')
     return jsonify(post.to_dict()), 200
 
 
@@ -205,6 +253,9 @@ def rate_post(post_id):
     # Update post ratings
     post.rating_total += val
     post.rating_count += 1
+    
+    # Log the rating event
+    user_logger.log_rating(post_id, val, data.get('type', 'like'))
     
     # Commit the rating update
     db.session.commit()
@@ -247,11 +298,12 @@ def update_user_preference(category):
 
 @main.route('/posts/reorder', methods=['POST'])
 def reorder_posts():
+    """Save manual post order."""
     data = request.get_json(force=True)
     order = data.get('order', [])
     category = data.get('category')
     key = f"order:{category or 'all'}"
-    session[key] = order
+    flask_session[key] = order
     return jsonify({"status":"ok"}), 200
 
 
@@ -318,16 +370,25 @@ def generate_posts():
 
 @main.route('/dashboard')
 def dashboard():
+    """Show the dashboard with stop button."""
+    if 'user_session_id' not in flask_session:
+        return redirect(url_for('main.start'))
+
+    user_session = UserSession.query.get(flask_session['user_session_id'])
+    if not user_session:
+        return redirect(url_for('main.start'))
+
     # recent interactions (last 20)
     events = []
     for p in Content.query.order_by(Content.created_at.desc()).limit(20):
-        events.append({
-            "id": p.id,
-            "category": p.category,
-            "avg": p.average_rating or 0,
-            "count": p.rating_count,
-            "text": (p.text or '')[:50]
-        })
+        if p.rating_count > 0:
+            events.append({
+                'time': p.created_at.isoformat(),
+                'type': 'rating',
+                'category': p.category,
+                'rating': p.average_rating
+            })
+
     # trends by category
     cats = db.session.query(
         Content.category,
@@ -335,17 +396,61 @@ def dashboard():
     ).filter(Content.rating_count>0).group_by(Content.category).all()
     trends = [{"category":c, "avg":float(a)} for c,a in cats]
 
-    weights = session.get('weights', DEFAULT_WEIGHTS)
+    weights = flask_session.get('weights', DEFAULT_WEIGHTS)
     return render_template('dashboard.html',
         events=json.dumps(events),
         trends=json.dumps(trends),
-        weights=weights
+        weights=weights,
+        username=flask_session['username']
     )
+
 
 @main.route('/dashboard/settings', methods=['POST'])
 def dashboard_settings():
     data = request.get_json(force=True)
-    session['weights'] = {
-        k: float(data[k]) for k in DEFAULT_WEIGHTS.keys() if k in data
-    }
-    return jsonify({"status":"ok","weights":session['weights']}), 200
+    weights = {k: float(data[k]) for k in DEFAULT_WEIGHTS.keys() if k in data}
+    flask_session['weights'] = weights
+    user_logger.log_action('weight_change', category=None)
+    return jsonify({"status": "ok", "weights": flask_session['weights']}), 200
+
+
+@main.route('/end-session')
+def end_session():
+    """End the current session and save data."""
+    if 'user_session_id' not in flask_session:
+        return redirect(url_for('main.start'))
+
+    user_session = UserSession.query.get(flask_session['user_session_id'])
+    if not user_session:
+        return redirect(url_for('main.start'))
+
+    try:
+        # Calculate total interactions
+        log_file = os.path.join(
+            current_app.root_path,
+            'logs',
+            f'participant_{flask_session.get("username", "unknown")}.csv'
+        )
+        total_interactions = 0
+        if os.path.exists(log_file):
+            with open(log_file) as f:
+                total_interactions = sum(1 for line in f) - 1  # subtract header
+
+        # Update session data
+        user_session.end_time = datetime.utcnow()
+        user_session.completed = True
+        user_session.total_interactions = total_interactions
+        db.session.commit()
+
+        # Save interaction data to CSV
+        user_logger.save_session_data(user_session.username)
+
+        # Clear Flask session
+        flask_session.clear()
+
+        return render_template('end.html', username=user_session.username)
+
+    except Exception as e:
+        print(f"Error ending session: {str(e)}")
+        flask_session.clear()
+        return redirect(url_for('main.start'))

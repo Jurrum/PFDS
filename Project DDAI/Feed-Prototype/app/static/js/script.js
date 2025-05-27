@@ -154,7 +154,8 @@ function createPostElement(post) {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ view_time: viewTime })
-      }).catch(console.error);
+      })
+      .catch(console.error);
     }
   });
 
@@ -274,48 +275,29 @@ function createPostElement(post) {
   hammer.on("panend", ev => {
     const thr = 100;
     if (Math.abs(ev.deltaX)>thr) {
-      postEl.style.transition = "transform .2s ease-out, opacity .2s";
-      postEl.style.transform  = ev.deltaX>0 ? "translateX(100%)" : "translateX(-100%)";
-      postEl.style.opacity    = "0";
+      // Remove the post immediately
+      postEl.remove();
       
-      // Create a clone to keep the post in the feed while rating
-      const postClone = postEl.cloneNode(true);
-      postClone.style.display = 'none';
-      postEl.parentNode.insertBefore(postClone, postEl);
+      // Get current category
+      const activeCat = document.querySelector(".cat-pill.active");
+      const query = activeCat ? activeCat.dataset.name : '';
       
-      setTimeout(() => {
-        const rating = ev.deltaX > 0 ? 5 : 1; // 5 for like (right), 1 for dislike (left)
-        fetch(`/posts/${post.id}/rate`, {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ value: rating })
-        })
-        .then(() => {
-          // Remove the original post first
-          postEl.remove();
-          
-          // Update the clone with the new rating
-          const ratingBtn = document.createElement('button');
-          ratingBtn.className = ev.deltaX > 0 ? 'like-btn' : 'dislike-btn';
-          ratingBtn.textContent = ev.deltaX > 0 ? '👍' : '👎';
-          ratingBtn.title = `${rating}/5`;
-          postClone.querySelector('.actions').innerHTML = ratingBtn.outerHTML;
-          
-          // Refresh the feed to show the updated order
-          const activeCat = document.querySelector(".cat-pill.active");
-          if (activeCat) {
-            const query = activeCat.dataset.name;
-            loadFeed(query);
-          } else {
-            loadFeed();
-          }
-        })
-        .catch(console.error)
-        .finally(() => {
-          showFeedback(`You swiped—rated ${rating}/5!`, "info");
-          maybeGenerate();
-        });
-      }, 200);
+      // Rate the post
+      const rating = ev.deltaX > 0 ? 5 : 1; // 5 for like (right), 1 for dislike (left)
+      fetch(`/posts/${post.id}/rate`, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ value: rating })
+      })
+      .then(() => {
+        // Refresh the feed with the new order
+        loadFeed(query);
+      })
+      .catch(console.error)
+      .finally(() => {
+        showFeedback(`You swiped—rated ${rating}/5!`, "info");
+        maybeGenerate();
+      });
     } else {
       postEl.style.transition = "transform .2s ease-out";
       postEl.style.transform  = "";

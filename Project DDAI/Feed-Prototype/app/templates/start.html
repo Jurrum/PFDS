@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed Study - Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .start-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .start-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Feed Study</h1>
+    
+    <div class="instructions">
+        <h2>Instructions</h2>
+        <p>This study aims to understand how people interact with social media feeds when given control over their content recommendation algorithm.</p>
+        <p>Your task is to:</p>
+        <ol>
+            <li>Create a username for this session</li>
+            <li>Explore the feed interface and "teach" it what content you like</li>
+            <li>Use features like swiping, rating, and category filtering</li>
+            <li>Think about how the feed responds to your interactions</li>
+        </ol>
+        <p>All your interactions will be logged for research purposes. You can end the session at any time using the "Stop" button in the dashboard.</p>
+    </div>
+
+    <form action="/start-session" method="POST">
+        <div>
+            <label for="username">Please enter your username:</label>
+            <input type="text" id="username" name="username" required minlength="3" maxlength="64">
+            <br><br>
+            <button type="submit" class="start-btn">Start Session</button>
+        </div>
+    </form>
+</body>
+</html>
