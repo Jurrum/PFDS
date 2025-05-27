@@ -1,9 +1,8 @@
 // app/static/js/script.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1) build category bar + initial feed
+  createFeedbackContainer();
   reloadCategories();
-  // 2) hook upload form if on /upload
   hookUploadForm();
 });
 
@@ -22,10 +21,13 @@ function hookUploadForm() {
       if (!r.ok) throw new Error("Upload failed");
       return r.json();
     })
-    .then(() => window.location.href = "/")
+    .then(() => {
+      showFeedback("Your post was created!", "success");
+      setTimeout(() => window.location.href = "/", 800);
+    })
     .catch(err => {
       console.error(err);
-      alert("Could not upload post.");
+      showFeedback("Could not upload post.", "error");
     });
   });
 }
@@ -39,6 +41,7 @@ function reloadCategories() {
     .then(cats => {
       container.appendChild(makePill("", "All"));
       cats.forEach(c => container.appendChild(makePill(c.id, c.name)));
+
       const plus = document.createElement("button");
       plus.className = "category-button add-cat-icon";
       plus.textContent = "+";
@@ -55,6 +58,7 @@ function reloadCategories() {
                     ? "" 
                     : `?category=${encodeURIComponent(name)}`;
           loadFeed(q);
+          showFeedback(`Filtered to "${btn.textContent}"`, "info");
         });
       });
 
@@ -85,7 +89,7 @@ function showAddCategoryInput(e) {
   confirm.style.cssText = "margin-left:6px;padding:4px 8px;border-radius:4px;";
   confirm.addEventListener("click", () => {
     const name = input.value.trim();
-    if (!name) return alert("Please enter a category name.");
+    if (!name) return showFeedback("Please enter a category name.", "error");
 
     fetch("/categories", {
       method: "POST",
@@ -95,11 +99,12 @@ function showAddCategoryInput(e) {
     .then(r => r.json())
     .then(json => {
       if (json.error) throw new Error(json.error);
+      showFeedback(`Category "${name}" added`, "success");
       reloadCategories();
     })
     .catch(err => {
       console.error(err);
-      alert("Failed to add category: " + err.message);
+      showFeedback("Failed to add category: " + err.message, "error");
     });
   });
 
@@ -123,10 +128,15 @@ function loadFeed(query = "") {
       const feed = document.getElementById("feed");
       feed.innerHTML = "";
       posts.forEach(post => {
-        feed.appendChild(createPostElement(post));
+        const el = createPostElement(post);
+        feed.appendChild(el);
       });
+      showFeedback("Feed updated", "info");
     })
-    .catch(err => console.error("Error loading feed:", err));
+    .catch(err => {
+      console.error("Error loading feed:", err);
+      showFeedback("Error loading feed", "error");
+    });
 }
 
 function createPostElement(post) {
@@ -134,6 +144,7 @@ function createPostElement(post) {
   const postEl = document.createElement("div");
   postEl.className = "post";
   postEl.dataset.id = post.id;
+  postEl.draggable = true;
 
   // text + image
   if (post.text)  postEl.innerHTML += `<p>${post.text}</p>`;
@@ -143,16 +154,6 @@ function createPostElement(post) {
   const actions = document.createElement("div");
   actions.className = "actions";
 
-  // ▲ and ▼ buttons for reranking
-  const upBtn = document.createElement("button");
-  upBtn.textContent = "▲";
-  upBtn.className = "reorder-btn";
-  upBtn.title = "Move up";
-  const downBtn = document.createElement("button");
-  downBtn.textContent = "▼";
-  downBtn.className = "reorder-btn";
-  downBtn.title = "Move down";
-
   // like/dislike buttons
   const likeBtn    = document.createElement("button");
   likeBtn.className    = "like-btn";
@@ -161,7 +162,7 @@ function createPostElement(post) {
   dislikeBtn.className = "dislike-btn";
   dislikeBtn.textContent = "👎";
 
-  actions.append(upBtn, downBtn, likeBtn, dislikeBtn);
+  actions.append(likeBtn, dislikeBtn);
   postEl.appendChild(actions);
 
   // rating scale (hidden)
@@ -220,29 +221,29 @@ function createPostElement(post) {
       })
       .then(() => {
         const sym = type === "like" ? "👍" : "👎";
-        const cls = type === "like" ? "like-btn" : "dislike-btn";
-        actions.innerHTML = `<button class="${cls}">${sym} ${val}</button>`;
+        actions.innerHTML = `<button class="${type}-btn">${sym} ${val}</button>`;
         ratingScale.style.display = "none";
         actions.style.display     = "flex";
+        showFeedback(`You rated this ${type} ${val}/5`, "success");
       })
       .then(() => maybeGenerate())
       .catch(console.error);
     });
   });
 
-  // swipe to rate = 3 + maybe generate
+  // swipe to rate = 3
   const hammer = new Hammer(postEl);
   hammer.get("pan").set({ direction: Hammer.DIRECTION_HORIZONTAL });
   hammer.on("pan", ev => {
     postEl.style.transform = `translateX(${ev.deltaX}px)`;
-    likeOv.style.opacity    = ev.deltaX > 0 ? Math.min(ev.deltaX/100,1) : 0;
-    dislikeOv.style.opacity = ev.deltaX < 0 ? Math.min(-ev.deltaX/100,1) : 0;
+    likeOv.style.opacity    = ev.deltaX>0 ? Math.min(ev.deltaX/100,1) : 0;
+    dislikeOv.style.opacity = ev.deltaX<0 ? Math.min(-ev.deltaX/100,1) : 0;
   });
   hammer.on("panend", ev => {
     const thr = 100;
-    if (Math.abs(ev.deltaX) > thr) {
+    if (Math.abs(ev.deltaX)>thr) {
       postEl.style.transition = "transform .2s ease-out, opacity .2s";
-      postEl.style.transform  = ev.deltaX > 0 ? "translateX(100%)" : "translateX(-100%)";
+      postEl.style.transform  = ev.deltaX>0 ? "translateX(100%)" : "translateX(-100%)";
       postEl.style.opacity    = "0";
       setTimeout(() => {
         fetch(`/posts/${post.id}/rate`, {
@@ -253,6 +254,7 @@ function createPostElement(post) {
         .catch(console.error)
         .finally(() => {
           postEl.remove();
+          showFeedback("You swiped—rated 3/5!", "info");
           maybeGenerate();
         });
       }, 200);
@@ -266,20 +268,34 @@ function createPostElement(post) {
     }
   });
 
-  // rerank handlers
-  upBtn.addEventListener("click", () => {
-    const prev = postEl.previousElementSibling;
-    if (prev) {
-      feed.insertBefore(postEl, prev);
-      sendReorder();
-    }
+  // drag & drop for reranking
+  postEl.addEventListener("dragstart", () => {
+    postEl.classList.add("dragging");
   });
-  downBtn.addEventListener("click", () => {
-    const next = postEl.nextElementSibling;
-    if (next) {
-      feed.insertBefore(next, postEl);
-      sendReorder();
-    }
+  postEl.addEventListener("dragend", () => {
+    postEl.classList.remove("dragging");
+  });
+
+  // allow drop on feed
+  postEl.addEventListener("dragover", e => {
+    e.preventDefault();
+    const dragging = document.querySelector(".dragging");
+    if (!dragging) return;
+    const boxes = [...feed.querySelectorAll(".post:not(.dragging)")];
+    const afterEl = boxes.reduce((closest, child) => {
+      const boxRect = child.getBoundingClientRect();
+      const offset = e.clientY - boxRect.top - boxRect.height / 2;
+      return offset < 0 && offset > closest.offset
+        ? { offset, element: child }
+        : closest;
+    }, { offset: -Infinity }).element;
+    if (afterEl) feed.insertBefore(dragging, afterEl);
+    else feed.appendChild(dragging);
+  });
+
+  postEl.addEventListener("drop", () => {
+    sendReorder();
+    showFeedback("Algorithm: noted your preferred order!", "info");
   });
 
   return postEl;
@@ -292,7 +308,6 @@ function maybeGenerate() {
 
   const active = document.querySelector(".cat-pill.active");
   const cat    = active?.dataset.name || null;
-  console.log("[GENERATION] count=", count, " cat=", cat);
 
   fetch("/generate", {
     method: "POST",
@@ -300,30 +315,48 @@ function maybeGenerate() {
     body: JSON.stringify({ category: cat, count: 3 })
   })
   .then(res => {
-    console.log("[GENERATION] status=", res.status);
-    if (!res.ok) throw new Error("Generation failed " + res.status);
+    if (!res.ok) throw new Error("Generation failed");
     return res.json();
   })
   .then(newPosts => {
-    console.log("[GENERATION] newPosts=", newPosts);
     newPosts.forEach(p => document.getElementById("feed")
       .appendChild(createPostElement(p)));
+    showFeedback(`3 new ${cat||'general'} posts generated`, "success");
   })
-  .catch(err => console.error("[GENERATION] error=", err));
+  .catch(err => console.error(err));
 }
 
 function sendReorder() {
   const feed = document.getElementById("feed");
   const order = Array.from(feed.children)
     .map(el => parseInt(el.dataset.id, 10));
-
   const active = document.querySelector(".cat-pill.active");
   const category = active?.dataset.name || null;
 
   fetch("/posts/reorder", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type":"application/json" },
     body: JSON.stringify({ order, category })
   })
   .catch(console.error);
+}
+
+// ——— Feedback “toaster” ———
+
+function createFeedbackContainer() {
+  const c = document.createElement("div");
+  c.id = "feedbackContainer";
+  document.body.appendChild(c);
+}
+
+function showFeedback(message, type="info", duration=3000) {
+  const container = document.getElementById("feedbackContainer");
+  const msg = document.createElement("div");
+  msg.className = `feedback-message ${type}`;
+  msg.textContent = message;
+  container.appendChild(msg);
+  setTimeout(() => {
+    msg.classList.add("hide");
+    msg.addEventListener("transitionend", () => msg.remove());
+  }, duration);
 }

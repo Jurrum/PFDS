@@ -262,4 +262,46 @@ body {
     font-size: 12px;
     transition: background-color 0.2s ease;
   }
+
+  /* Drag & drop hint */
+.post.dragging {
+  opacity: 0.5;
+}
+
+/* Feedback “toaster” container */
+#feedbackContainer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Individual messages */
+.feedback-message {
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  opacity: 1;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.feedback-message.info {
+  background: #1877f2;
+}
+.feedback-message.success {
+  background: #28a745;
+}
+.feedback-message.error {
+  background: #dc3545;
+}
+
+/* Animate hide */
+.feedback-message.hide {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
   
