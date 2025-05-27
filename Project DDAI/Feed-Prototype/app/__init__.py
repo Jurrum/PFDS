@@ -17,7 +17,12 @@ if not openai.api_key:
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'replace-with-a-secure-random-key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///feed.db'
+    # Set up database path in instance directory
+    instance_path = os.path.join(app.instance_path)
+    os.makedirs(instance_path, exist_ok=True)
+    db_path = os.path.join(instance_path, 'feed.db')
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)

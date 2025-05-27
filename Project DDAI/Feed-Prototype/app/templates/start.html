@@ -47,7 +47,7 @@
         <p>All your interactions will be logged for research purposes. You can end the session at any time using the "Stop" button in the dashboard.</p>
     </div>
 
-    <form action="/start-session" method="POST">
+    <form action="{{ url_for('main.start_session') }}" method="POST">
         <div>
             <label for="username">Please enter your username:</label>
             <input type="text" id="username" name="username" required minlength="3" maxlength="64">

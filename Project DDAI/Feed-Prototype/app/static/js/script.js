@@ -124,13 +124,21 @@ function makePill(id, label) {
 function loadFeed(query = "") {
   fetch("/get_posts" + query)
     .then(r => r.json())
-    .then(posts => {
+    .then(response => {
+      // If response is an object with posts array, use that
+      const posts = Array.isArray(response) ? response : response.posts || [];
+      
       const feed = document.getElementById("feed");
       feed.innerHTML = "";
-      posts.forEach(post => {
-        const el = createPostElement(post);
-        feed.appendChild(el);
-      });
+      
+      // Only iterate if we have posts
+      if (Array.isArray(posts)) {
+        posts.forEach(post => {
+          const el = createPostElement(post);
+          feed.appendChild(el);
+        });
+      }
+      
       showFeedback("Feed updated", "info");
     })
     .catch(err => {

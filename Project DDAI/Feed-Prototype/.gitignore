@@ -46,6 +46,9 @@ session_data/
 instance/
 *.db
 
+# User-specific databases
+databases/
+
 # Uploads
 uploads/
 

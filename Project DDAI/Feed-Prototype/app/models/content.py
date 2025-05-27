@@ -4,7 +4,11 @@ from datetime import datetime
 from app import db
 
 class Content(db.Model):
-    __tablename__ = 'contents'
+    def __init__(self, username, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__table_args__ = {'extend_existing': True}
+        self.__tablename__ = f'contents_{username.lower()}'
+        self.username = username
 
     id          = db.Column(db.Integer, primary_key=True)
     text        = db.Column(db.Text)
@@ -17,6 +21,16 @@ class Content(db.Model):
     rating_total = db.Column(db.Integer, default=0)
     rating_count = db.Column(db.Integer, default=0)
     created_at  = db.Column(db.DateTime, default=datetime.utcnow)
+
+    @property
+    def ratings_table_name(self):
+        """Return the name of the ratings table for this user."""
+        return f'ratings_{self.username.lower()}'
+
+    @property
+    def user(self):
+        """Get the user for this content."""
+        return UserSession.query.filter_by(username=self.username).first()
 
     def __repr__(self):
         return f'<Content {self.id}>'

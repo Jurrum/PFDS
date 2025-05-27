@@ -48,24 +48,34 @@ def start():
 @main.route('/start-session', methods=['POST'])
 def start_session():
     """Start a new user session."""
+    print("Start session route called")
+    print(f"Request form data: {request.form}")
+    print(f"Username: {request.form.get('username')}")
+
     # Get username from form data
     username = request.form.get('username')
     
     if not username:
+        print("No username provided")
         return redirect(url_for('main.start'))
 
     # Check if username already exists
     existing_session = UserSession.query.filter_by(username=username).first()
     if existing_session:
+        print(f"Found existing session for username: {username}")
         # If session exists but is not completed, redirect to home
         if not existing_session.completed:
+            print("Session not completed, redirecting to index")
             flask_session['user_session_id'] = existing_session.id
             flask_session['username'] = username
-            return redirect(url_for('main.index'))
-        # If session exists and is completed, redirect back to start
-        return redirect(url_for('main.start'))
+            return redirect(url_for('main.index'), code=303)
+        
+        # If session exists and is completed, redirect to start_new_session
+        print("Found completed session, redirecting to start_new_session")
+        return redirect(url_for('main.start_new_session', username=username))
 
-    # Create new session
+    # Create new session for new user
+    print(f"Creating new session for username: {username}")
     user_session = UserSession(username=username)
     db.session.add(user_session)
     db.session.commit()
@@ -80,8 +90,72 @@ def start_session():
     # Start interaction timer
     flask_session['interaction_start'] = datetime.utcnow()
 
-    # Redirect to home page
-    return redirect(url_for('main.index'))
+    print(f"Session created successfully, redirecting to index")
+    # Redirect to home page with 303 status code
+    return redirect(url_for('main.index'), code=303)
+
+@main.route('/start-new-session/<username>')
+def start_new_session(username):
+    """Start a new session for an existing user."""
+    try:
+        # First close all database connections in a new context
+        with current_app.app_context():
+            db.session.remove()
+            db.engine.dispose()
+            
+            # Wait for connections to close
+            import time
+            time.sleep(0.1)
+
+        # Delete old session
+        existing_session = UserSession.query.filter_by(username=username).first()
+        if existing_session:
+            db.session.delete(existing_session)
+            db.session.commit()
+
+        # Remove old feed.db file
+        db_path = os.path.join(current_app.instance_path, 'feed.db')
+        if os.path.exists(db_path):
+            # Try multiple times to remove the file
+            for _ in range(5):
+                try:
+                    os.remove(db_path)
+                    break
+                except PermissionError:
+                    time.sleep(0.1)  # Wait and try again
+
+        # Create a new empty database
+        with current_app.app_context():
+            # Remove any remaining connections
+            db.session.remove()
+            db.engine.dispose()
+            
+            # Create new database
+            db.create_all()
+
+        # Create new session
+        user_session = UserSession(username=username)
+        db.session.add(user_session)
+        db.session.commit()
+
+        # Store session ID in Flask session
+        flask_session['user_session_id'] = user_session.id
+        flask_session['username'] = username
+
+        # Initialize logging
+        user_logger.init_participant(username)
+        
+        # Start interaction timer
+        flask_session['interaction_start'] = datetime.utcnow()
+
+        print(f"New session created for username: {username}")
+        # Redirect to home page with 303 status code
+        return redirect(url_for('main.index'), code=303)
+
+    except Exception as e:
+        print(f"Error starting new session: {str(e)}")
+        flask_session.clear()
+        return redirect(url_for('main.start'))
 
 
 
@@ -132,45 +206,72 @@ def uploaded_file(filename):
 
 @main.route('/get_posts')
 def get_posts():
-    """
-    Return JSON posts, filtered by category, paginated,
-    scored by dynamic weights, and session‐ordered.
-    """
-    q = Content.query
-    cat = request.args.get('category')
-    if cat:
-        q = q.filter_by(category=cat)
+    """Get posts for the feed."""
+    offset = request.args.get('offset', 0, type=int)
+    limit = request.args.get('limit', 50, type=int)
+    category = request.args.get('category')
+    username = flask_session.get('username')
+
+    if not username:
+        return jsonify([])  # Return empty array instead of error
 
     try:
-        limit  = int(request.args.get('limit', 50))
-        offset = int(request.args.get('offset', 0))
-    except ValueError:
-        limit, offset = 50, 0
+        # Query posts from user's specific table
+        q = Content.query.with_session(db.session)
+        if category:
+            q = q.filter(Content.category == category)
+        
+        posts = q.offset(offset).limit(limit).all()
 
-    # Get posts
-    posts = q.offset(offset).limit(limit).all()
-    
-    # Apply saved manual order
-    order_key = f"order:{cat or 'all'}"
-    saved = flask_session.get(order_key)
-    if saved:
-        id_map = {p.id: p for p in posts}
-        ordered = []
-        for pid in saved:
-            if pid in id_map:
-                ordered.append(id_map.pop(pid))
-        ordered.extend(id_map.values())
-        posts = ordered
-    else:
-        # Sort posts by creation date (newest first) if no manual order
-        posts.sort(key=lambda p: p.created_at, reverse=True)
+        # If no posts on first page, generate some
+        if offset == 0 and not posts:
+            # gather high‐rated examples
+            ex_q = Content.query.filter(Content.rating_count > 0)
+            if category:
+                ex_q = ex_q.filter_by(category=category)
+            examples = ex_q.order_by((Content.rating_total/Content.rating_count).desc()).limit(3).all()
+            example_texts = [p.text for p in examples if p.text]
+            
+            # Generate new posts
+            generated = generate_texts(category, 5, examples=example_texts)
+            for txt in generated:
+                if txt:  # Only add non-empty posts
+                    p = Content(username=username, text=txt, category=category or 'General')
+                    db.session.add(p)
+                    posts.append(p)
+            
+            db.session.commit()
+            
+            # Sort posts by creation date (newest first)
+            posts.sort(key=lambda p: p.created_at, reverse=True)
 
-    # if no posts on first page, generate some
-    if offset == 0 and not posts:
+        # Apply saved manual order
+        order_key = f"order:{category or 'all'}"
+        saved = flask_session.get(order_key)
+        if saved:
+            id_map = {p.id: p for p in posts}
+            ordered = []
+            for pid in saved:
+                if pid in id_map:
+                    ordered.append(id_map.pop(pid))
+            ordered.extend(id_map.values())
+            posts = ordered
+
+        # Return just the posts array if this is a direct client request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify([p.to_dict() for p in posts])
+        
+        return jsonify({
+            'posts': [p.to_dict() for p in posts],
+            'total': q.count()
+        })
+    except Exception as e:
+        print(f"Error fetching posts: {str(e)}")
+        return jsonify([])  # Return empty array on error
         # gather high‐rated examples
         ex_q = Content.query.filter(Content.rating_count > 0)
-        if cat:
-            ex_q = ex_q.filter_by(category=cat)
+        if category:
+            ex_q = ex_q.filter_by(category=category)
         examples = ex_q.order_by((Content.rating_total/Content.rating_count).desc()).limit(3).all()
         example_texts = [p.text for p in examples if p.text]
         generated = generate_texts(cat, 5, examples=example_texts)
@@ -348,16 +449,14 @@ def generate_posts():
             return jsonify({"error": "Failed to generate enough posts"}), 500
 
         new_posts = []
+        username = flask_session.get('username')
+        if not username:
+            return jsonify({'error': 'No username in session'}), 400
         for txt in new_texts:
             if txt:  # Only add non-empty posts
-                p = Content(text=txt, category=category or 'General')
+                p = Content(username=username, text=txt, category=category or 'General')
                 db.session.add(p)
                 new_posts.append(p)
-        
-        if not new_posts:
-            print("No valid posts generated")
-            return jsonify({"error": "Failed to generate valid posts"}), 500
-        
         db.session.commit()
         print(f"Successfully added {len(new_posts)} new posts")
         return jsonify([p.to_dict() for p in new_posts]), 201
@@ -445,10 +544,44 @@ def end_session():
         # Save interaction data to CSV
         user_logger.save_session_data(user_session.username)
 
-        # Clear Flask session
-        flask_session.clear()
+        # Get the database path
+        db_path = os.path.join(current_app.instance_path, 'feed.db')
+        new_db_path = os.path.join(
+            current_app.root_path,
+            'databases',
+            f'{user_session.username}_feed.db'
+        )
+        
+        # Create databases directory if it doesn't exist
+        os.makedirs(os.path.dirname(new_db_path), exist_ok=True)
 
-        return render_template('end.html', username=user_session.username)
+        # Close all database connections
+        try:
+            # Close all sessions
+            db.session.close_all()
+            db.session.remove()
+            
+            # Dispose engine
+            engine = db.engine
+            engine.dispose()
+            
+            # Wait a moment
+            import time
+            time.sleep(0.1)
+
+            # Copy the database to new location
+            if os.path.exists(db_path):
+                import shutil
+                shutil.copy2(db_path, new_db_path)
+
+            # Clear Flask session
+            flask_session.clear()
+
+            return render_template('end.html', username=user_session.username)
+
+        except Exception as e:
+            print(f"Error handling database: {str(e)}")
+            raise
 
     except Exception as e:
         print(f"Error ending session: {str(e)}")
