@@ -39,6 +39,66 @@ header h1 {
   font-size: 14px;
 }
 
+/* ——— Loading Indicator ——— */
+.loading-indicator {
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 1rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.loading-indicator::after {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #ddd;
+  border-top-color: #1877f2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ——— Empty Feed & Error Messages ——— */
+.empty-feed-message,
+.error-message {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.empty-feed-message {
+  color: #666;
+  background-color: #f8f9fa;
+  border: 1px dashed #dee2e6;
+}
+
+.error-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+/* Make sure messages are properly spaced in the feed */
+#feed > .empty-feed-message,
+#feed > .error-message {
+  margin: 1rem;
+}
+
 /* ——— Stop Button ——— */
 .stop-button {
   background-color: #dc3545;

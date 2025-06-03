@@ -3,57 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feed Study - Welcome</title>
+    <title>Teaching the Feed - Welcome</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         body {
-            max-width: 800px;
+            max-width: 700px;
             margin: 2rem auto;
             padding: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
         }
-        .instructions {
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 2rem;
+            font-size: 1.4rem;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+        }
+        ul, ol {
+            padding-left: 1.5rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .consent-section {
             background-color: #f8f9fa;
             padding: 1.5rem;
             border-radius: 8px;
-            margin-bottom: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid #3498db;
+        }
+        .consent-checkbox {
+            margin: 1rem 0;
+        }
+        .consent-checkbox input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+        .username-input {
+            margin: 1.5rem 0;
+        }
+        .username-input input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
         }
         .start-btn {
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
             padding: 1rem 2rem;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 1.1rem;
+            width: 100%;
+            transition: background-color 0.3s;
         }
         .start-btn:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
+        }
+        .start-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .contact-info {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        .highlight {
+            background-color: #fffde7;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to the Feed Study</h1>
+    <h1>Welcome to the "Teaching the Feed" Study</h1>
     
-    <div class="instructions">
-        <h2>Instructions</h2>
-        <p>This study aims to understand how people interact with social media feeds when given control over their content recommendation algorithm.</p>
-        <p>Your task is to:</p>
-        <ol>
-            <li>Create a username for this session</li>
-            <li>Explore the feed interface and "teach" it what content you like</li>
-            <li>Use features like swiping, rating, and category filtering</li>
-            <li>Think about how the feed responds to your interactions</li>
-        </ol>
-        <p>All your interactions will be logged for research purposes. You can end the session at any time using the "Stop" button in the dashboard.</p>
+    <div class="container">
+        <p><strong>Thank you for volunteering!</strong><br>
+        We are exploring how people shape—and are shaped by—personalised content feeds when they are given direct tools to "teach" the underlying algorithm.</p>
+
+        <h2>What will happen</h2>
+        
+        <h3>Pre-study questionnaire (≈ 3 min)</h3>
+        <p>– asks about your current relationship with everyday social-media feeds.</p>
+        
+        <h3>Hands-on session (≈ 10 min)</h3>
+        <p>– you will use an experimental feed prototype and interact with posts by swiping, rating (1–5), filtering categories, and adding new topics.</p>
+        
+        <h3>Post-study questionnaire (≈ 4 min)</h3>
+        <p>– reflects on your experience with the prototype.</p>
+        
+        <p>You may stop and withdraw at any point by clicking "Stop Session."</p>
+
+        <h2>What data we collect</h2>
+        <ul>
+            <li>Actions inside the prototype (swipes, ratings, category changes, timestamps).</li>
+            <li>Your questionnaire responses.</li>
+            <li>No personal identifiers other than the username you create.</li>
+        </ul>
+        <p class="highlight">(Please choose a name that does not reveal your real identity.)</p>
+        
+        <p>All data are stored securely, used only for academic research, and reported in aggregated or anonymised form.</p>
+
+        <h2>Your rights</h2>
+        <ul>
+            <li>Participation is voluntary.</li>
+            <li>You may skip any question or end the session at any time without penalty.</li>
+            <li>You can request deletion of your data by emailing the research team (contact provided below) within 30 days.</li>
+        </ul>
+
+        <div class="consent-section">
+            <h2>Consent</h2>
+            <p>Please confirm both statements before continuing:</p>
+            
+            <form id="consentForm" action="{{ url_for('main.start_session') }}" method="POST">
+                <div class="consent-checkbox">
+                    <label>
+                        <input type="checkbox" name="consent_understood" required>
+                        I have read and understood the information above.
+                    </label>
+                </div>
+                <div class="consent-checkbox">
+                    <label>
+                        <input type="checkbox" name="consent_participate" required>
+                        I consent to my anonymised data being used for this research project.
+                    </label>
+                </div>
+                
+                <div class="username-input">
+                    <label for="username">Create a username for this session:</label>
+                    <input type="text" id="username" name="username" required 
+                           minlength="3" maxlength="64" 
+                           pattern="[A-Za-z0-9_\-]+" 
+                           title="Please use only letters, numbers, hyphens, or underscores">
+                </div>
+                
+                <button type="submit" id="startButton" class="start-btn" disabled>Start Session</button>
+            </form>
+        </div>
+        
+        <div class="contact-info">
+            <p>Research lead: Joram Boumans<br>
+            For questions or withdrawal requests, contact: <a href="mailto:feed-study@researchlab.example">feed-study@researchlab.example</a></p>
+        </div>
     </div>
 
-    <form action="{{ url_for('main.start_session') }}" method="POST">
-        <div>
-            <label for="username">Please enter your username:</label>
-            <input type="text" id="username" name="username" required minlength="3" maxlength="64">
-            <br><br>
-            <button type="submit" class="start-btn">Start Session</button>
-        </div>
-    </form>
+    <script>
+        // Enable start button only when all checkboxes are checked
+        const form = document.getElementById('consentForm');
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        const usernameInput = document.getElementById('username');
+        const startButton = document.getElementById('startButton');
+        
+        function updateStartButton() {
+            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            const usernameValid = usernameInput.value.length >= 3;
+            startButton.disabled = !(allChecked && usernameValid);
+        }
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateStartButton);
+        });
+        
+        usernameInput.addEventListener('input', updateStartButton);
+
+        // Handle form submission with AJAX
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            startButton.disabled = true;
+            startButton.textContent = 'Starting session...';
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+                
+                // Check if the response is JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    if (response.ok) {
+                        // Redirect to the pre-questionnaire page on success
+                        window.location.href = data.redirect_url || "{{ url_for('main.pre_questionnaire') }}";
+                    } else {
+                        throw new Error(data.error || 'Failed to start session');
+                    }
+                } else {
+                    // If not JSON, check for redirect
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        throw new Error('Unexpected response from server');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                startButton.disabled = false;
+                startButton.textContent = 'Start Session';
+            }
+        });
+    </script>
 </body>
 </html>

@@ -10,17 +10,20 @@ class Content(db.Model):
         self.__tablename__ = f'contents_{username.lower()}'
         self.username = username
 
-    id          = db.Column(db.Integer, primary_key=True)
-    text        = db.Column(db.Text)
-    image       = db.Column(db.String(256))
-    category    = db.Column(db.String(64))
-    likes       = db.Column(db.Integer, default=0)
-    dislikes    = db.Column(db.Integer, default=0)
-    shares      = db.Column(db.Integer, default=0)
-    comments    = db.Column(db.Integer, default=0)
-    rating_total = db.Column(db.Integer, default=0)
-    rating_count = db.Column(db.Integer, default=0)
-    created_at  = db.Column(db.DateTime, default=datetime.utcnow)
+    id           = db.Column(db.Integer, primary_key=True)
+    text         = db.Column(db.Text)
+    image        = db.Column(db.String(256))
+    category     = db.Column(db.String(64))
+    likes        = db.Column(db.Integer, default=0)
+    dislikes     = db.Column(db.Integer, default=0)
+    shares       = db.Column(db.Integer, default=0)
+    comments     = db.Column(db.Integer, default=0)
+    rating_total  = db.Column(db.Integer, default=0)
+    rating_count  = db.Column(db.Integer, default=0)
+    views        = db.Column(db.Integer, default=0)  # Number of times post was viewed
+    view_time    = db.Column(db.Float, default=0.0)   # Total view time in seconds
+    last_viewed  = db.Column(db.DateTime)              # When the post was last viewed
+    created_at   = db.Column(db.DateTime, default=datetime.utcnow)
 
     @property
     def ratings_table_name(self):
@@ -49,6 +52,9 @@ class Content(db.Model):
             'likes': self.likes,
             'dislikes': self.dislikes,
             'shares': self.shares,
+            'views': self.views,
+            'view_time': self.view_time,
+            'last_viewed': self.last_viewed.isoformat() if self.last_viewed else None,
             'comments': self.comments,
             'rating': self.average_rating,
             'created_at': self.created_at.isoformat()

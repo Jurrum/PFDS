@@ -1,5 +1,60 @@
 // app/static/js/script.js
 
+// Track post view times
+let viewStartTime = null;
+let currentPostId = null;
+let viewTimeInterval = null;
+
+// Track view time at regular intervals
+function startViewTimeTracking(postId) {
+    // Stop any existing tracking
+    stopViewTimeTracking();
+    
+    // Start new tracking
+    currentPostId = postId;
+    viewStartTime = Date.now();
+    
+    // Send updates every 5 seconds while the post is being viewed
+    viewTimeInterval = setInterval(() => {
+        if (viewStartTime && currentPostId) {
+            const viewTime = (Date.now() - viewStartTime) / 1000; // Convert to seconds
+            sendViewTime(currentPostId, viewTime);
+        }
+    }, 5000);
+}
+
+function stopViewTimeTracking() {
+    if (viewTimeInterval) {
+        clearInterval(viewTimeInterval);
+        viewTimeInterval = null;
+    }
+    
+    // Send final view time when user stops viewing
+    if (viewStartTime && currentPostId) {
+        const viewTime = (Date.now() - viewStartTime) / 1000; // Convert to seconds
+        sendViewTime(currentPostId, viewTime);
+    }
+    
+    viewStartTime = null;
+    currentPostId = null;
+}
+
+function sendViewTime(postId, viewTime) {
+    fetch(`/posts/${postId}/view_time`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ view_time: viewTime })
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error('Failed to track view time');
+        }
+    })
+    .catch(error => {
+        console.error('Error tracking view time:', error);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   createFeedbackContainer();
   reloadCategories();
@@ -36,42 +91,34 @@ function reloadCategories() {
   const container = document.getElementById("categoryButtons");
   container.innerHTML = "";
 
-  fetch("/categories")
-    .then(r => r.json())
-    .then(cats => {
-      container.appendChild(makePill("", "All"));
-      cats.forEach(c => container.appendChild(makePill(c.id, c.name)));
+  // Define the 5 main categories we want to show
+  const mainCategories = ["Technology", "Science", "Health", "Entertainment", "Lifestyle"];
+  
+  // Always add the 'All' button first
+  container.appendChild(makePill("", "All"));
+  
+  // Add the 5 main categories
+  mainCategories.forEach(category => {
+    container.appendChild(makePill(category, category));
+  });
 
-      const plus = document.createElement("button");
-      plus.className = "category-button add-cat-icon";
-      plus.textContent = "+";
-      plus.title = "Add category";
-      plus.addEventListener("click", showAddCategoryInput);
-      container.appendChild(plus);
-
-      container.querySelectorAll(".cat-pill").forEach(btn => {
-        btn.addEventListener("click", () => {
-          container.querySelectorAll(".cat-pill").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          const name = btn.dataset.name;
-          const q = btn.dataset.id === "" 
-                    ? "" 
-                    : `?category=${encodeURIComponent(name)}`;
-          loadFeed(q);
-          showFeedback(`Filtered to "${btn.textContent}"`, "info");
-        });
-      });
-
-      const active = container.querySelector(".cat-pill.active");
-      const q = active.dataset.id === ""
-              ? ""
-              : `?category=${encodeURIComponent(active.dataset.name)}`;
+  // Set up event listeners for the category buttons
+  container.querySelectorAll(".cat-pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+      container.querySelectorAll(".cat-pill").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const category = btn.dataset.id === "" ? "" : btn.dataset.id;
+      const q = category ? `?category=${encodeURIComponent(category)}` : "";
       loadFeed(q);
-    })
-    .catch(err => {
-      console.error(err);
-      loadFeed();
+      showFeedback(`Filtered to "${btn.textContent}"`, "info");
     });
+  });
+
+  // Load the feed with the active category (default to "All")
+  const active = container.querySelector(".cat-pill.active") || container.querySelector(".cat-pill");
+  const category = active && active.dataset.id !== "" ? active.dataset.id : "";
+  const q = category ? `?category=${encodeURIComponent(category)}` : "";
+  loadFeed(q);
 }
 
 function showAddCategoryInput(e) {
@@ -121,29 +168,94 @@ function makePill(id, label) {
   return btn;
 }
 
+/**
+ * Load posts into the feed, with proper view time tracking
+ * @param {string} query - Optional query string for filtering posts
+ */
 function loadFeed(query = "") {
-  fetch("/get_posts" + query)
-    .then(r => r.json())
+  // Stop any active view time tracking before refreshing the feed
+  stopViewTimeTracking();
+  
+  // Show a loading indicator
+  const feed = document.getElementById("feed");
+  if (!feed) {
+    console.error("Feed container not found");
+    return Promise.reject("Feed container not found");
+  }
+  
+  // Add loading indicator
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.className = 'loading-indicator';
+  loadingIndicator.textContent = 'Loading posts...';
+  
+  // Clear existing content and show loading indicator
+  feed.innerHTML = '';
+  feed.appendChild(loadingIndicator);
+  
+  return fetch("/get_posts" + query)
     .then(response => {
-      // If response is an object with posts array, use that
-      const posts = Array.isArray(response) ? response : response.posts || [];
-      
-      const feed = document.getElementById("feed");
-      feed.innerHTML = "";
-      
-      // Only iterate if we have posts
-      if (Array.isArray(posts)) {
-        posts.forEach(post => {
-          const el = createPostElement(post);
-          feed.appendChild(el);
-        });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Remove loading indicator
+      if (loadingIndicator.parentNode) {
+        loadingIndicator.remove();
       }
       
-      showFeedback("Feed updated", "info");
+      // Parse the response - data should be an object with a 'posts' array
+      const responseData = data || {};
+      const posts = Array.isArray(responseData) ? responseData : (responseData.posts || []);
+      
+      // Clear the feed
+      feed.innerHTML = '';
+      
+      if (posts.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.className = 'empty-feed-message';
+        emptyMessage.textContent = 'No posts found. Try a different category or generate new content.';
+        feed.appendChild(emptyMessage);
+        return [];
+      }
+      
+      // Add posts to the feed
+      posts.forEach(post => {
+        try {
+          const postEl = createPostElement(post);
+          if (postEl) {
+            feed.appendChild(postEl);
+          }
+        } catch (error) {
+          console.error('Error creating post element:', error);
+        }
+      });
+      
+      // Check if we need to generate more posts
+      if (posts.length < 5) {
+        maybeGenerate();
+      }
+      
+      showFeedback(`Loaded ${posts.length} posts`, "success");
+      return posts;
     })
-    .catch(err => {
-      console.error("Error loading feed:", err);
+    .catch(error => {
+      console.error("Error loading feed:", error);
+      
+      // Remove loading indicator on error
+      if (loadingIndicator.parentNode) {
+        loadingIndicator.remove();
+      }
+      
+      // Show error message
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'error-message';
+      errorMessage.textContent = 'Failed to load posts. Please try again.';
+      feed.appendChild(errorMessage);
+      
       showFeedback("Error loading feed", "error");
+      return [];
     });
 }
 
@@ -152,20 +264,27 @@ function createPostElement(post) {
   postEl.className = "post";
   postEl.dataset.id = post.id;
   postEl.dataset.category = post.category;
-  postEl.addEventListener('mouseenter', () => {
-    viewStartTime = Date.now();
+  
+  // Track when the post becomes visible in the viewport
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Post is visible, start tracking view time
+        startViewTimeTracking(post.id);
+      } else {
+        // Post is no longer visible, stop tracking
+        stopViewTimeTracking();
+      }
+    });
+  }, {
+    threshold: 0.5 // Consider post visible when 50% is in viewport
   });
-  postEl.addEventListener('mouseleave', () => {
-    if (viewStartTime) {
-      const viewTime = (Date.now() - viewStartTime) / 1000;  // Convert to seconds
-      fetch(`/posts/${post.id}/view_time`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ view_time: viewTime })
-      })
-      .catch(console.error);
-    }
-  });
+  
+  // Start observing the post element
+  observer.observe(postEl);
+  
+  // Clean up observer when post is removed
+  postEl._observer = observer;
 
   // text + image
   if (post.text)  postEl.innerHTML += `<p>${post.text}</p>`;
@@ -349,62 +468,114 @@ function createPostElement(post) {
   return postEl;
 }
 
+/**
+ * Generate new posts when needed based on user interaction patterns.
+ * This function is called after a user rates a post or when the feed is low on content.
+ */
 function maybeGenerate() {
-  // Get the active category
+  // Stop any active view time tracking during generation
+  stopViewTimeTracking();
+  
+  // Get the active category and feed element
   const active = document.querySelector(".cat-pill.active");
-  const cat = active?.dataset.name || null;
-
-  // Reset rating count if no category is active
-  if (!active) {
-    localStorage.setItem("ratingCount", "0");
+  const feed = document.getElementById("feed");
+  
+  // Validate we have the required elements
+  if (!feed) {
+    console.error("Feed container not found");
     return;
   }
-
-  // Increment rating count
-  let count = parseInt(localStorage.getItem("ratingCount") || "0", 10) + 1;
-  localStorage.setItem("ratingCount", count);
-
-  // Only generate if we've reached the threshold
-  if (count % 3 !== 0) return;
-
+  
+  // Get current post count in the feed
+  const currentPostCount = feed.querySelectorAll(".post").length;
+  const minPosts = 5; // Minimum number of posts we want to maintain
+  
+  // If we have enough posts, no need to generate more
+  if (currentPostCount >= minPosts) {
+    return;
+  }
+  
+  // Calculate how many posts we need to generate
+  const postsToGenerate = minPosts - currentPostCount;
+  const category = active?.dataset.name || null;
+  
+  // Show loading indicator
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.className = 'loading-indicator';
+  loadingIndicator.textContent = 'Loading more posts...';
+  feed.appendChild(loadingIndicator);
+  
   // Make the generation request
   fetch("/generate", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ category: cat, count: 3 })
+    headers: {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    body: JSON.stringify({ 
+      category: category, 
+      count: postsToGenerate 
+    })
   })
   .then(res => {
     if (!res.ok) {
-      throw new Error("Generation failed: " + res.statusText);
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
     return res.json();
   })
-  .then(newPosts => {
-    if (!newPosts || !newPosts.length) {
-      console.warn("No new posts generated");
+  .then(data => {
+    // Remove loading indicator
+    if (loadingIndicator.parentNode) {
+      loadingIndicator.remove();
+    }
+    
+    // Check if we got valid posts
+    if (!data || !data.success || !Array.isArray(data.posts) || data.posts.length === 0) {
+      console.warn("No new posts generated or invalid response format");
       return;
     }
     
     // Add new posts to the feed
-    const feed = document.getElementById("feed");
-    if (!feed) {
-      console.error("Feed container not found");
-      return;
-    }
-    
-    newPosts.forEach(post => {
-      const postEl = createPostElement(post);
-      if (postEl) {
-        feed.appendChild(postEl);
+    data.posts.forEach(post => {
+      try {
+        const postEl = createPostElement(post);
+        if (postEl) {
+          feed.appendChild(postEl);
+          console.log(`Added new post: ${post.id} in category: ${post.category}`);
+        }
+      } catch (error) {
+        console.error('Error creating post element:', error);
       }
     });
     
-    // Show success message
-    showFeedback(`3 new ${cat || 'general'} posts generated`, "success");
+    // Show success message if we added any posts
+    if (data.posts.length > 0) {
+      const categoryName = category || 'general';
+      showFeedback(`Added ${data.posts.length} new ${categoryName} posts`, "success");
+    }
+    
+    // If we still don't have enough posts, try again
+    if (feed.querySelectorAll(".post").length < minPosts) {
+      maybeGenerate();
+    }
   })
-  .catch(err => {
-    console.error("Error generating posts:", err);
-    showFeedback("Failed to generate new posts", "error");
+  .catch(error => {
+    console.error("Error generating posts:", error);
+    
+    // Remove loading indicator on error
+    if (loadingIndicator.parentNode) {
+      loadingIndicator.remove();
+    }
+    
+    // Only show error if we have no posts at all
+    if (currentPostCount === 0) {
+      showFeedback("Failed to load posts. Please try again.", "error");
+    }
+    
+    // Retry after a delay if we still need more posts
+    if (feed.querySelectorAll(".post").length < minPosts) {
+      setTimeout(maybeGenerate, 5000); // Retry after 5 seconds
+    }
   });
 }
 

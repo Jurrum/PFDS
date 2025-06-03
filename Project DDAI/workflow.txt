@@ -1,0 +1,33 @@
+Complete the pre-study questionnaire
+– captures your current feelings about ordinary social-media feeds.
+
+Land on your personal (empty) feed
+– a blank timeline appears; no posts yet.
+
+Prototype auto-generates 5 seed posts
+– created on the spot via the OpenAI API.
+
+Explore and “teach” the feed
+
+Swipe → quick like / dislike
+
+1–5 slider → precise rating after each swipe
+
+Filter pills → switch topics or tap “+” to add a new category
+
+(Optional) Drag posts up/down to re-rank or attach labels
+
+Trigger fresh content
+– every 5 interactions, the system appends 3 new posts (AI or subreddit source).
+
+Check your stats (Dashboard button)
+– view running counts of likes, dislikes, average rating, top categories.
+
+End your session (End Session button on Dashboard)
+– freezes logging, saves data.
+
+Fill in the post-study questionnaire
+– same 15-item scale + reflection questions about changes you noticed.
+
+Session closes & data stored
+– logs, ratings, and questionnaire answers are saved in a clean, anonymised report for the research team.

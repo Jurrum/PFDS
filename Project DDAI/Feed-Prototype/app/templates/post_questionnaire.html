@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Interaction Questionnaire</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .questionnaire-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        p.intro {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+            font-size: 1.1em;
+        }
+        .form-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+        }
+        .form-group:hover {
+            background-color: #f0f7ff;
+            transition: background-color 0.3s ease;
+        }
+        .form-group h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .form-group input[type="text"], 
+        .form-group textarea, 
+        .form-group select,
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border 0.3s ease;
+        }
+        .form-group input[type="text"]:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .scale-question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 6px;
+        }
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0 5px;
+            padding: 0 10px;
+        }
+        .scale-option {
+            text-align: center;
+            font-size: 0.85em;
+            color: #555;
+            flex: 1;
+        }
+        .keywords-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .keyword-chip {
+            background: #e3f2fd;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            color: #1565c0;
+        }
+        .keyword-chip button {
+            margin-left: 8px;
+            background: none;
+            border: none;
+            color: #0d47a1;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            line-height: 1;
+        }
+        .comparison-scale {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        .comparison-options {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0 5px;
+        }
+        .comparison-option {
+            text-align: center;
+            font-size: 0.85em;
+            color: #555;
+            flex: 1;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .checkbox-group label:hover {
+            background-color: #e9ecef;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+        button[type="submit"] {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="questionnaire-container">
+        <h1>Post-Interaction Questionnaire</h1>
+        <p class="intro">Thank you for trying out our prototype. Please share your thoughts about your experience.</p>
+        
+        <form id="postQuestionnaireForm" method="POST" action="{{ url_for('main.post_questionnaire') }}">
+            <input type="hidden" name="username" value="{{ username }}">
+            
+            <div class="form-group">
+                <h2>A. Immediate Reflection</h2>
+                
+                <div class="form-group">
+                    <label>1. List 5 keywords that now describe the prototype feed you just used.</label>
+                    <div class="keywords-input">
+                        <input type="text" id="prototypeKeywordsInput" placeholder="Type a keyword and press Enter">
+                    </div>
+                    <div id="prototypeKeywordsContainer"></div>
+                    <input type="hidden" id="prototype_keywords" name="prototype_keywords" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>2. Which interaction(s) did you use most? (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="interactions_used" value="swipe"> Swipe like/dislike</label>
+                        <label><input type="checkbox" name="interactions_used" value="rating"> 1-5 rating slider</label>
+                        <label><input type="checkbox" name="interactions_used" value="category_filter"> Category filter</label>
+                        <label><input type="checkbox" name="interactions_used" value="new_category"> Add new category</label>
+                        <label><input type="checkbox" name="interactions_used" value="reorder"> Re-rank by drag-and-drop</label>
+                        <label><input type="checkbox" name="interactions_used" value="labels"> Apply labels</label>
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" name="interactions_used" value="other" id="other_interaction">
+                            <span style="margin-right: 10px;">Other (please specify):</span>
+                            <input type="text" name="interactions_other" id="interactions_other" style="flex: 1; margin-left: 0;" disabled>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h2>B. Relationship-to-Algorithm Scale</h2>
+                <p>Please rate the SAME statements, now referring to the prototype feed you just experienced.</p>
+                <p>1 = Strongly disagree 2 = Disagree 3 = Neutral 4 = Agree 5 = Strongly agree</p>
+                
+                <div class="scale-questions">
+                    {% for i in range(1, 16) %}
+                    <div class="scale-question">
+                        <label for="pc{{ i }}">C{{ i }}. {{ questions[i-1] }}</label>
+                        <div class="scale-options">
+                            {% for j in range(1, 6) %}
+                            <label class="scale-option">
+                                <input type="radio" name="pc{{ i }}" value="{{ j }}" required> {{ j }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h2>C. Change & Comparative Perception</h2>
+                <p>For each aspect below, compared with your usual feed, did the prototype feel…?</p>
+                
+                <div class="comparison-scale">
+                    <label>Agency / Control:</label>
+                    <div class="comparison-options">
+                        <label class="comparison-option">
+                            <input type="radio" name="agency_compare" value="much_lower" required> Much lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="agency_compare" value="lower"> Lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="agency_compare" value="same"> Same
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="agency_compare" value="higher"> Higher
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="agency_compare" value="much_higher"> Much higher
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="comparison-scale">
+                    <label>Transparency:</label>
+                    <div class="comparison-options">
+                        <label class="comparison-option">
+                            <input type="radio" name="transparency_compare" value="much_lower" required> Much lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="transparency_compare" value="lower"> Lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="transparency_compare" value="same"> Same
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="transparency_compare" value="higher"> Higher
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="transparency_compare" value="much_higher"> Much higher
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="comparison-scale">
+                    <label>Enjoyment:</label>
+                    <div class="comparison-options">
+                        <label class="comparison-option">
+                            <input type="radio" name="enjoyment_compare" value="much_lower" required> Much lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="enjoyment_compare" value="lower"> Lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="enjoyment_compare" value="same"> Same
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="enjoyment_compare" value="higher"> Higher
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="enjoyment_compare" value="much_higher"> Much higher
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="comparison-scale">
+                    <label>Mental effort required:</label>
+                    <div class="comparison-options">
+                        <label class="comparison-option">
+                            <input type="radio" name="effort_compare" value="much_lower" required> Much lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="effort_compare" value="lower"> Lower
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="effort_compare" value="same"> Same
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="effort_compare" value="higher"> Higher
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="effort_compare" value="much_higher"> Much higher
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="comparison-scale">
+                    <label>Time distortion:</label>
+                    <div class="comparison-options">
+                        <label class="comparison-option">
+                            <input type="radio" name="time_compare" value="much_less" required> Much less
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="time_compare" value="less"> Less
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="time_compare" value="same"> Same
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="time_compare" value="more"> More
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="time_compare" value="much_more"> Much more
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="surprise">What, if anything, surprised you about how the prototype responded to your actions?</label>
+                    <textarea id="surprise" name="surprise" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="preference">If given the choice, would you prefer a teachable feed like this for daily use? Why or why not?</label>
+                    <textarea id="preference" name="preference" required></textarea>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h2>D. Technical & UX Feedback (Optional)</h2>
+                
+                <div class="form-group">
+                    <label for="usability">Usability rating (1-5): How easy was it to learn and use the prototype?</label>
+                    <select id="usability" name="usability">
+                        <option value="">Select a rating</option>
+                        <option value="1">1 - Very difficult</option>
+                        <option value="2">2 - Difficult</option>
+                        <option value="3">3 - Neutral</option>
+                        <option value="4">4 - Easy</option>
+                        <option value="5">5 - Very easy</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issues">Did you encounter any glitches or issues? If yes, please describe:</label>
+                    <textarea id="issues" name="issues"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="suggestions">Do you have any suggestions for improvement?</label>
+                    <textarea id="suggestions" name="suggestions"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn">Submit Questionnaire</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Handle prototype keywords input
+        const prototypeKeywords = [];
+        const prototypeKeywordsInput = document.getElementById('prototypeKeywordsInput');
+        const prototypeKeywordsContainer = document.getElementById('prototypeKeywordsContainer');
+        const prototypeKeywordsHidden = document.getElementById('prototype_keywords');
+        const otherInteractionCheckbox = document.getElementById('other_interaction');
+        const interactionsOtherInput = document.getElementById('interactions_other');
+
+        // Toggle other interaction input
+        otherInteractionCheckbox?.addEventListener('change', function() {
+            interactionsOtherInput.disabled = !this.checked;
+            if (!this.checked) {
+                interactionsOtherInput.value = '';
+            }
+        });
+
+        prototypeKeywordsInput?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                e.preventDefault();
+                const keyword = this.value.trim();
+                if (!prototypeKeywords.includes(keyword)) {
+                    prototypeKeywords.push(keyword);
+                    updatePrototypeKeywordsDisplay();
+                    this.value = '';
+                }
+            }
+        });
+
+        function updatePrototypeKeywordsDisplay() {
+            if (!prototypeKeywordsContainer) return;
+            
+            prototypeKeywordsContainer.innerHTML = '';
+            prototypeKeywords.forEach((keyword, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'keyword-chip';
+                chip.innerHTML = `
+                    ${keyword}
+                    <button type="button" onclick="removePrototypeKeyword(${index})" aria-label="Remove keyword">&times;</button>
+                `;
+                prototypeKeywordsContainer.appendChild(chip);
+            });
+            if (prototypeKeywordsHidden) {
+                prototypeKeywordsHidden.value = prototypeKeywords.join(',');
+            }
+        }
+
+        function removePrototypeKeyword(index) {
+            prototypeKeywords.splice(index, 1);
+            updatePrototypeKeywordsDisplay();
+        }
+
+        // Form validation
+        const form = document.getElementById('postQuestionnaireForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Check keywords
+                if (prototypeKeywords.length === 0) {
+                    e.preventDefault();
+                    alert('Please add at least one keyword to describe the prototype feed.');
+                    if (prototypeKeywordsInput) prototypeKeywordsInput.focus();
+                    return false;
+                }
+
+                // Check interactions
+                const interactionCheckboxes = document.querySelectorAll('input[name="interactions_used"]');
+                const isAnyInteractionChecked = interactionCheckboxes && Array.from(interactionCheckboxes).some(checkbox => checkbox.checked);
+                
+                if (!isAnyInteractionChecked) {
+                    e.preventDefault();
+                    alert('Please select at least one interaction method you used.');
+                    return false;
+                }
+
+                // Check 'other' interaction
+                const otherCheckbox = document.querySelector('input[name="interactions_used"][value="other"]');
+                if (otherCheckbox && otherCheckbox.checked && interactionsOtherInput && !interactionsOtherInput.value.trim()) {
+                    e.preventDefault();
+                    alert('Please specify the other interaction method you used.');
+                    interactionsOtherInput.focus();
+                    return false;
+                }
+
+                // Check scale questions
+                const scaleInputs = document.querySelectorAll('input[type="radio"][required]');
+                if (scaleInputs.length > 0) {
+                    const scaleGroups = new Set(Array.from(scaleInputs).map(input => input.name));
+                    const answeredGroups = new Set();
+                    
+                    scaleInputs.forEach(input => {
+                        if (input.checked) {
+                            answeredGroups.add(input.name);
+                        }
+                    });
+
+                    if (answeredGroups.size < scaleGroups.size) {
+                        e.preventDefault();
+                        alert('Please answer all scale questions before submitting.');
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+        }
+    </script>
+</body>
+</html>
