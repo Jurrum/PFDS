@@ -358,10 +358,11 @@ function createPostElement(post) {
       fetch(`/posts/${id}/rate`, {
         method: "POST",
         headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ value: val })
+        body: JSON.stringify({ value: val, type: 'rating' })
       })
       .then(() => {
         // Update user preferences for this category
+        console.log('Updating user preferences. Category:', post.category, 'Rating val:', val, 'isPositive:', isPositive, 'Cookies:', document.cookie);
         fetch(`/user/preferences/${post.category}`, {
           method: "POST",
           headers: {"Content-Type":"application/json"},
@@ -380,8 +381,12 @@ function createPostElement(post) {
         // Refresh the feed to show the updated order
         const activeCat = document.querySelector(".cat-pill.active");
         if (activeCat) {
-          const query = activeCat.dataset.name;
-          loadFeed(query);
+          const categoryName = activeCat.dataset.name;
+          let categoryQuery = "";
+          if (categoryName && categoryName.toLowerCase() !== 'all') {
+            categoryQuery = `?category=${encodeURIComponent(categoryName)}`;
+          }
+          loadFeed(categoryQuery);
         } else {
           loadFeed();
         }
@@ -414,11 +419,19 @@ function createPostElement(post) {
       fetch(`/posts/${post.id}/rate`, {
         method: "POST",
         headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ value: rating })
+        body: JSON.stringify({ value: rating, type: 'rating' })
       })
       .then(() => {
         // Refresh the feed with the new order
-        loadFeed(query);
+        const activeCat = document.querySelector(".cat-pill.active");
+        let categoryQuery = "";
+        if (activeCat) {
+          const categoryId = activeCat.dataset.id;
+          if (categoryId && categoryId !== "All") {
+            categoryQuery = `?category=${encodeURIComponent(categoryId)}`;
+          }
+        }
+        loadFeed(categoryQuery);
       })
       .catch(console.error)
       .finally(() => {
@@ -600,12 +613,14 @@ function sendReorder() {
   .then(() => {
     // Refresh the feed after successful reorder
     const activeCat = document.querySelector(".cat-pill.active");
+    let categoryQuery = "";
     if (activeCat) {
-      const query = activeCat.dataset.name;
-      loadFeed(query);
-    } else {
-      loadFeed();
+      const categoryId = activeCat.dataset.id; // Use dataset.id for consistency
+      if (categoryId) { // Ensure categoryId is not empty (for "All" category which has id="")
+        categoryQuery = `?category=${encodeURIComponent(categoryId)}`;
+      }
     }
+    loadFeed(categoryQuery); // Pass the fully formed query string or empty for "All"
     showFeedback("Feed reordered", "success");
   })
   .catch(err => {

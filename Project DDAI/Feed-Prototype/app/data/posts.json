@@ -9,8 +9,8 @@
       "views": 0,
       "view_time": 0.0,
       "created_at": "2025-06-03T00:00:00Z",
-      "rating_total": 6,
-      "rating_count": 2
+      "rating_total": 134,
+      "rating_count": 53
     },
     {
       "id": 2,
@@ -20,7 +20,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T23:00:00Z"
+      "created_at": "2025-06-02T23:00:00Z",
+      "rating_total": 57,
+      "rating_count": 17
     },
     {
       "id": 3,
@@ -30,7 +32,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T22:00:00Z"
+      "created_at": "2025-06-02T22:00:00Z",
+      "rating_total": 36,
+      "rating_count": 9
     },
     {
       "id": 4,
@@ -40,7 +44,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T21:00:00Z"
+      "created_at": "2025-06-02T21:00:00Z",
+      "rating_total": 32,
+      "rating_count": 8
     },
     {
       "id": 5,
@@ -50,7 +56,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T20:00:00Z"
+      "created_at": "2025-06-02T20:00:00Z",
+      "rating_total": 15,
+      "rating_count": 3
     },
     {
       "id": 6,
@@ -60,7 +68,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T19:00:00Z"
+      "created_at": "2025-06-02T19:00:00Z",
+      "rating_total": 9,
+      "rating_count": 2
     },
     {
       "id": 7,
@@ -70,7 +80,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T18:00:00Z"
+      "created_at": "2025-06-02T18:00:00Z",
+      "rating_total": 2,
+      "rating_count": 2
     },
     {
       "id": 8,
@@ -80,7 +92,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T17:00:00Z"
+      "created_at": "2025-06-02T17:00:00Z",
+      "rating_total": 12,
+      "rating_count": 4
     },
     {
       "id": 9,
@@ -100,7 +114,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T15:00:00Z"
+      "created_at": "2025-06-02T15:00:00Z",
+      "rating_total": 6,
+      "rating_count": 2
     },
     {
       "id": 11,
@@ -110,7 +126,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T14:00:00Z"
+      "created_at": "2025-06-02T14:00:00Z",
+      "rating_total": 20,
+      "rating_count": 4
     },
     {
       "id": 12,
@@ -130,7 +148,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T12:00:00Z"
+      "created_at": "2025-06-02T12:00:00Z",
+      "rating_total": 1,
+      "rating_count": 1
     },
     {
       "id": 14,
@@ -150,7 +170,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T10:00:00Z"
+      "created_at": "2025-06-02T10:00:00Z",
+      "rating_total": 1,
+      "rating_count": 1
     },
     {
       "id": 16,
@@ -160,7 +182,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T09:00:00Z"
+      "created_at": "2025-06-02T09:00:00Z",
+      "rating_total": 7,
+      "rating_count": 3
     },
     {
       "id": 17,
@@ -200,7 +224,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T05:00:00Z"
+      "created_at": "2025-06-02T05:00:00Z",
+      "rating_total": 5,
+      "rating_count": 1
     },
     {
       "id": 21,
@@ -210,7 +236,9 @@
       "dislikes": 0,
       "views": 0,
       "view_time": 0.0,
-      "created_at": "2025-06-02T04:00:00Z"
+      "created_at": "2025-06-02T04:00:00Z",
+      "rating_total": 1,
+      "rating_count": 1
     },
     {
       "id": 22,
@@ -1003,4 +1031,4 @@
       "created_at": "2025-05-29T21:00:00Z"
     }
   ]
-}}
+}

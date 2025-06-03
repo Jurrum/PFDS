@@ -16,4 +16,5 @@ if __name__ == '__main__':
     os.makedirs(session_dir, exist_ok=True)
     
     # Run the application
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
+3

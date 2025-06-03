@@ -1221,37 +1221,52 @@ def update_user_preference(category, rating_value=None, is_positive=None):
 
 
 @main.route('/user/preferences/<category>', methods=['POST'])
+@session_required # Ensure user is logged in and DB is switched
 def update_user_preference_endpoint(category):
     """
     Update user preferences for a specific category based on their ratings.
     """
-    session_id = request.cookies.get('session_id', '')
-    if not session_id:
-        return jsonify({"error": "No session ID"}), 400
-    
-    data = request.get_json(force=True)
+    flask_user_session_id = session.get('user_session_id')
+
+    if not flask_user_session_id:
+        current_app.logger.warning(f"No user_session_id in Flask session for /user/preferences/{category}")
+        return jsonify({"error": "User session not found or invalid."}), 401
+
+    data = request.get_json(silent=True) # Use silent=True to avoid exception on bad JSON
+    if not data:
+        current_app.logger.warning(f"Invalid or empty JSON payload for /user/preferences/{category}, user_session_id: {flask_user_session_id}")
+        return jsonify({"error": "Invalid or empty JSON payload"}), 400
+
     rating = data.get('rating')
-    is_positive = data.get('is_positive', False)
-    
+    is_positive = data.get('is_positive', False) # Default is_positive to False if not provided
+
     if not isinstance(rating, int) or not (1 <= rating <= 5):
-        return jsonify({"error": "Invalid rating"}), 400
-    
-    # Get or create user preference
-    pref = UserPreference.query.filter_by(session_id=session_id, category=category).first()
-    if not pref:
-        pref = UserPreference(session_id=session_id, category=category)
-        db.session.add(pref)
-    
-    # Update preference
-    pref.update_preference(rating, is_positive)
-    db.session.commit()
-    
-    return jsonify(pref.to_dict()), 200
-    db.session.commit()
-    return jsonify({
-        "average_rating": post.average_rating,
-        "rating_count": post.rating_count
-    }), 200
+        current_app.logger.warning(f"Invalid rating value: {rating} for /user/preferences/{category}, user_session_id: {flask_user_session_id}")
+        return jsonify({"error": "Invalid rating. Must be an integer between 1 and 5."}), 400
+
+    try:
+        # Get or create user preference
+        # Ensure UserPreference.session_id is compatible with type of flask_user_session_id
+        pref = UserPreference.query.filter_by(session_id=str(flask_user_session_id), category=category).first()
+        if not pref:
+            pref = UserPreference(session_id=str(flask_user_session_id), category=category)
+            db.session.add(pref)
+
+        # Update preference (assuming this method exists and handles logic)
+        pref.update_preference(rating, is_positive)
+        
+        db.session.commit()
+        current_app.logger.info(f"Successfully updated preferences for user_session_id: {flask_user_session_id}, category: {category}, rating: {rating}")
+        return jsonify(pref.to_dict()), 200
+        
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        current_app.logger.error(f"Database error updating user preference for user_session_id: {flask_user_session_id}, category: {category}. Error: {e}", exc_info=True)
+        return jsonify({"error": "Failed to update preferences due to a database error."}), 500
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Unexpected error updating user preference for user_session_id: {flask_user_session_id}, category: {category}. Error: {e}", exc_info=True)
+        return jsonify({"error": "An unexpected error occurred while updating preferences."}), 500
 
 
 @main.route('/posts/reorder', methods=['POST'])
