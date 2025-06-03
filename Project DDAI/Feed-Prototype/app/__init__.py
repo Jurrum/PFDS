@@ -2,28 +2,25 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-from flask import Flask, session as flask_session
+from flask import Flask, session, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager, UserMixin
+
 from flask_session import Session
 from config import config, Config
 from pathlib import Path
 import openai
 
-# Simple User class for Flask-Login
-class User(UserMixin):
-    def __init__(self, id):
-        self.id = id
+
 
 # Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
-login_manager = LoginManager()
-login_manager.login_view = 'main.start'  # Update this to your login route
 
 # Initialize session extension
-flask_session = Session()
+# The original 'flask_session = Session()' is kept, but 'session' imported above is the request session proxy.
+# This was a source of confusion. 'flask_session_ext' might be a clearer name for the extension instance.
+flask_session_ext = Session() # Renamed for clarity to avoid conflict with request 'session'
 openai.api_key = os.getenv("OPENAI_API_KEY")
 if not openai.api_key:
     raise RuntimeError("Missing OPENAI_API_KEY in environment")
@@ -66,7 +63,7 @@ def create_app(config_name='default'):
     )
     
     # Initialize session
-    flask_session.init_app(app)
+    flask_session_ext.init_app(app) # Use renamed extension instance
     
     # Set a default database URI that will be updated per user session
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
@@ -131,15 +128,7 @@ def create_app(config_name='default'):
     # Initialize other extensions
     migrate.init_app(app, db)
     
-    # Configure and initialize Flask-Login
-    login_manager.init_app(app)
-    
     # Session configuration is already set up earlier
-    
-    # Add user loader
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User(user_id)
     
     # Register blueprints
     from .routes import main as main_bp

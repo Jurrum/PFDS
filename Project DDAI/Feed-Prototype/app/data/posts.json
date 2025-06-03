@@ -1,0 +1,1006 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "text": "Technology Update: AI is transforming industries worldwide. Stay ahead with the latest developments.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-03T00:00:00Z",
+      "rating_total": 6,
+      "rating_count": 2
+    },
+    {
+      "id": 2,
+      "text": "Science News: The human body contains 37 trillion cells. Each one plays a crucial role in your health.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T23:00:00Z"
+    },
+    {
+      "id": 3,
+      "text": "Health Tip: Walking 30 minutes daily can significantly improve your heart health and boost your mood.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T22:00:00Z"
+    },
+    {
+      "id": 4,
+      "text": "Entertainment Update: Check out the latest blockbuster movies hitting theaters this weekend.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T21:00:00Z"
+    },
+    {
+      "id": 5,
+      "text": "Technology Spotlight: 5G networks are rolling out globally, promising faster speeds and better connectivity.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T20:00:00Z"
+    },
+    {
+      "id": 6,
+      "text": "Science Discovery: Researchers have made a breakthrough in quantum computing that could revolutionize data processing.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T19:00:00Z"
+    },
+    {
+      "id": 7,
+      "text": "Wellness Tip: Drinking enough water throughout the day can boost your energy levels and improve focus.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T18:00:00Z"
+    },
+    {
+      "id": 8,
+      "text": "Music News: The hottest new album of the year has just been released to critical acclaim.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T17:00:00Z"
+    },
+    {
+      "id": 9,
+      "text": "Tech Review: The latest smartphone model offers impressive camera upgrades and longer battery life.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T16:00:00Z"
+    },
+    {
+      "id": 10,
+      "text": "Space Exploration: NASA's latest mission has sent back stunning images of Jupiter's moons.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T15:00:00Z"
+    },
+    {
+      "id": 11,
+      "text": "Lifestyle Insight: Decluttering your workspace can boost productivity and reduce stress.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T14:00:00Z"
+    },
+    {
+      "id": 12,
+      "text": "Technology Brief: Edge computing is moving data processing closer to the source for faster results.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T13:00:00Z"
+    },
+    {
+      "id": 13,
+      "text": "Science Fact: Honey never spoils; edible samples have been found in ancient Egyptian tombs.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T12:00:00Z"
+    },
+    {
+      "id": 14,
+      "text": "Health Advice: Incorporating strength training twice a week maintains bone density as you age.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T11:00:00Z"
+    },
+    {
+      "id": 15,
+      "text": "Entertainment Buzz: A beloved TV series is returning with a brand-new season next month.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T10:00:00Z"
+    },
+    {
+      "id": 16,
+      "text": "Lifestyle Tip: Practicing gratitude journaling can improve overall life satisfaction.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T09:00:00Z"
+    },
+    {
+      "id": 17,
+      "text": "Technology Insight: Autonomous drones are now used for rapid disaster-relief mapping.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T08:00:00Z"
+    },
+    {
+      "id": 18,
+      "text": "Science Byte: Earth\u00e2\u20ac\u2122s magnetic field flips roughly every 200,000 years\u00e2\u20ac\u201dscientists study the next reversal.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T07:00:00Z"
+    },
+    {
+      "id": 19,
+      "text": "Health Reminder: Regular sleep between 7-9 hours is linked to lower risk of chronic disease.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T06:00:00Z"
+    },
+    {
+      "id": 20,
+      "text": "Entertainment Flashback: Classic video games are making a strong comeback in retro arcades worldwide.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T05:00:00Z"
+    },
+    {
+      "id": 21,
+      "text": "Lifestyle Hack: Meal-prepping on Sundays saves time and money throughout the week.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T04:00:00Z"
+    },
+    {
+      "id": 22,
+      "text": "Technology Trend: Smart home devices now integrate seamlessly with voice assistants for complete control.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T03:00:00Z"
+    },
+    {
+      "id": 23,
+      "text": "Science Snapshot: Researchers discover water vapor in the atmosphere of an exoplanet.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T02:00:00Z"
+    },
+    {
+      "id": 24,
+      "text": "Health Fact: A balanced breakfast can enhance cognitive performance during the day.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T01:00:00Z"
+    },
+    {
+      "id": 25,
+      "text": "Entertainment Insider: Award-winning director teases a mystery project for streaming platforms.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-02T00:00:00Z"
+    },
+    {
+      "id": 26,
+      "text": "Lifestyle Focus: Minimalist living spaces can reduce anxiety and increase clarity.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T23:00:00Z"
+    },
+    {
+      "id": 27,
+      "text": "Technology Watch: Foldable phone screens are more durable with new polymer layers.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T22:00:00Z"
+    },
+    {
+      "id": 28,
+      "text": "Science Update: The James Webb Telescope reveals unprecedented detail of distant galaxies.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T21:00:00Z"
+    },
+    {
+      "id": 29,
+      "text": "Health Strategy: Mindful breathing exercises can lower blood pressure in minutes.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T20:00:00Z"
+    },
+    {
+      "id": 30,
+      "text": "Entertainment Highlight: International film festivals showcase emerging directors to watch.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T19:00:00Z"
+    },
+    {
+      "id": 31,
+      "text": "Lifestyle Advance: Adopting plant-based meals twice a week benefits both health and environment.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T18:00:00Z"
+    },
+    {
+      "id": 32,
+      "text": "Technology Deep Dive: Neural networks continue to outperform traditional models in image recognition.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T17:00:00Z"
+    },
+    {
+      "id": 33,
+      "text": "Science Note: CRISPR gene-editing tools offer potential cures for inherited diseases.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T16:00:00Z"
+    },
+    {
+      "id": 34,
+      "text": "Health Insight: Standing desks can help reduce lower back pain associated with long sitting periods.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T15:00:00Z"
+    },
+    {
+      "id": 35,
+      "text": "Entertainment Sneak Peek: Streaming services announce a slate of holiday specials.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T14:00:00Z"
+    },
+    {
+      "id": 36,
+      "text": "Lifestyle Reminder: Scheduling a digital detox day each month can improve mental clarity.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T13:00:00Z"
+    },
+    {
+      "id": 37,
+      "text": "Technology Flash: Blockchain technology finds new applications in supply-chain verification.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T12:00:00Z"
+    },
+    {
+      "id": 38,
+      "text": "Science Curiosity: Octopuses have three hearts and blue blood, aiding deep-sea survival.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T11:00:00Z"
+    },
+    {
+      "id": 39,
+      "text": "Health Observation: Regular stretching improves flexibility and may decrease injury risk.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T10:00:00Z"
+    },
+    {
+      "id": 40,
+      "text": "Entertainment Report: Concert tours drive record ticket sales as live events rebound.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T09:00:00Z"
+    },
+    {
+      "id": 41,
+      "text": "Lifestyle Suggestion: Switching to LED bulbs reduces energy costs and carbon footprint.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T08:00:00Z"
+    },
+    {
+      "id": 42,
+      "text": "Technology Perspective: Quantum encryption promises virtually unbreakable data security.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T07:00:00Z"
+    },
+    {
+      "id": 43,
+      "text": "Science Update: Arctic ice levels show new patterns linked to atmospheric rivers.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T06:00:00Z"
+    },
+    {
+      "id": 44,
+      "text": "Health Guidance: Replacing sugary drinks with water can reduce calorie intake significantly.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T05:00:00Z"
+    },
+    {
+      "id": 45,
+      "text": "Entertainment Throwback: Vintage vinyl records see renewed popularity among young collectors.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T04:00:00Z"
+    },
+    {
+      "id": 46,
+      "text": "Lifestyle Tip: Indoor plants can purify air and boost mood in home offices.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T03:00:00Z"
+    },
+    {
+      "id": 47,
+      "text": "Technology Insight: GPU advances are accelerating breakthroughs in generative AI models.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T02:00:00Z"
+    },
+    {
+      "id": 48,
+      "text": "Science Note: Scientists decode the oldest DNA ever discovered from a mammoth tooth.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T01:00:00Z"
+    },
+    {
+      "id": 49,
+      "text": "Health Reminder: A balanced diet rich in fiber supports gut microbiome health.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-06-01T00:00:00Z"
+    },
+    {
+      "id": 50,
+      "text": "Entertainment Scoop: Streaming platform signs a landmark deal with acclaimed filmmakers.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T23:00:00Z"
+    },
+    {
+      "id": 51,
+      "text": "Lifestyle Idea: Morning sunlight exposure can help regulate your circadian rhythm.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T22:00:00Z"
+    },
+    {
+      "id": 52,
+      "text": "Technology Overview: Cloud gaming reduces hardware requirements for immersive gameplay.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T21:00:00Z"
+    },
+    {
+      "id": 53,
+      "text": "Science Byte: Lightning strikes produce gamma-ray flashes detectable from space.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T20:00:00Z"
+    },
+    {
+      "id": 54,
+      "text": "Health Check: Moderate coffee consumption is linked to lower risk of certain diseases.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T19:00:00Z"
+    },
+    {
+      "id": 55,
+      "text": "Entertainment Buzz: A surprise cameo in a hit series sparks social-media frenzy.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T18:00:00Z"
+    },
+    {
+      "id": 56,
+      "text": "Lifestyle Reminder: Scheduling regular breaks can increase productivity during remote work.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T17:00:00Z"
+    },
+    {
+      "id": 57,
+      "text": "Technology Alert: Cybersecurity experts warn of emerging phishing techniques leveraging AI voice cloning.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T16:00:00Z"
+    },
+    {
+      "id": 58,
+      "text": "Science Snapshot: Fossil evidence suggests dinosaurs may have suffered from respiratory infections similar to birds.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T15:00:00Z"
+    },
+    {
+      "id": 59,
+      "text": "Health Note: Replacing refined grains with whole grains supports long-term cardiovascular health.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T14:00:00Z"
+    },
+    {
+      "id": 60,
+      "text": "Entertainment Feature: Documentary filmmakers explore the rise of esports and global tournaments.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T13:00:00Z"
+    },
+    {
+      "id": 61,
+      "text": "Lifestyle Strategy: Budgeting with the 50/30/20 rule can simplify personal finance goals.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T12:00:00Z"
+    },
+    {
+      "id": 62,
+      "text": "Technology Breakthrough: Solid-state batteries promise higher energy density and faster charging.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T11:00:00Z"
+    },
+    {
+      "id": 63,
+      "text": "Science Update: New species of deep-sea jellyfish discovered using submersible drones.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T10:00:00Z"
+    },
+    {
+      "id": 64,
+      "text": "Health Tip: Taking short walking breaks after meals can aid blood-sugar regulation.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T09:00:00Z"
+    },
+    {
+      "id": 65,
+      "text": "Entertainment News: An upcoming award show introduces new categories for virtual production.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T08:00:00Z"
+    },
+    {
+      "id": 66,
+      "text": "Lifestyle Inspiration: Starting a hobby can reduce stress and improve life satisfaction.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T07:00:00Z"
+    },
+    {
+      "id": 67,
+      "text": "Technology Outlook: The metaverse ecosystem expands with new hardware and developer tools.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T06:00:00Z"
+    },
+    {
+      "id": 68,
+      "text": "Science Find: Solar flares can disrupt radio communications but also provide auroral shows.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T05:00:00Z"
+    },
+    {
+      "id": 69,
+      "text": "Health Cue: Practicing mindful eating helps prevent overeating and improves digestion.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T04:00:00Z"
+    },
+    {
+      "id": 70,
+      "text": "Entertainment Spotlight: Indie game developers push boundaries with innovative storytelling.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T03:00:00Z"
+    },
+    {
+      "id": 71,
+      "text": "Lifestyle Note: Consistent bedtime routines can optimize sleep quality for children and adults.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T02:00:00Z"
+    },
+    {
+      "id": 72,
+      "text": "Technology Update: Wearable medical sensors offer continuous health monitoring at home.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T01:00:00Z"
+    },
+    {
+      "id": 73,
+      "text": "Science Highlight: A new asteroid sample hints at water-rich minerals dating to early solar system.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-31T00:00:00Z"
+    },
+    {
+      "id": 74,
+      "text": "Health Insight: Regular social interaction supports mental health, especially in older adults.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T23:00:00Z"
+    },
+    {
+      "id": 75,
+      "text": "Entertainment Preview: A highly anticipated sequel drops its first trailer this week.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T22:00:00Z"
+    },
+    {
+      "id": 76,
+      "text": "Lifestyle Advice: Setting micro-goals can help overcome procrastination on big projects.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T21:00:00Z"
+    },
+    {
+      "id": 77,
+      "text": "Technology Note: Satellite internet coverage expands to rural regions, bridging the digital divide.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T20:00:00Z"
+    },
+    {
+      "id": 78,
+      "text": "Science Fact: The giant squid\u00e2\u20ac\u2122s eyes are the largest in the animal kingdom, up to 30 cm across.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T19:00:00Z"
+    },
+    {
+      "id": 79,
+      "text": "Health Reminder: Drinking herbal tea in the evening can promote relaxation and better sleep.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T18:00:00Z"
+    },
+    {
+      "id": 80,
+      "text": "Entertainment Update: Major music festival announces lineup featuring global artists.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T17:00:00Z"
+    },
+    {
+      "id": 81,
+      "text": "Lifestyle Focus: Adopting a capsule wardrobe can simplify daily clothing choices.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T16:00:00Z"
+    },
+    {
+      "id": 82,
+      "text": "Technology Review: New AR smart-glasses offer hands-free navigation overlays for cyclists.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T15:00:00Z"
+    },
+    {
+      "id": 83,
+      "text": "Science Snapshot: Antarctic ice cores reveal climate cycles stretching back 800,000 years.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T14:00:00Z"
+    },
+    {
+      "id": 84,
+      "text": "Health Tip: Taking five deep breaths can lower stress hormones in under two minutes.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T13:00:00Z"
+    },
+    {
+      "id": 85,
+      "text": "Entertainment Highlight: Classic sitcom gets a modern reboot with original cast cameos.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T12:00:00Z"
+    },
+    {
+      "id": 86,
+      "text": "Lifestyle Reminder: Keeping a reusable water bottle reduces plastic waste and keeps you hydrated.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T11:00:00Z"
+    },
+    {
+      "id": 87,
+      "text": "Technology Insight: Advances in natural-language AI are enabling real-time language translation ear-buds.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T10:00:00Z"
+    },
+    {
+      "id": 88,
+      "text": "Science Fact: Venus rotates in the opposite direction to most planets, including Earth.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T09:00:00Z"
+    },
+    {
+      "id": 89,
+      "text": "Health Insight: Short midday naps can improve memory consolidation and alertness.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T08:00:00Z"
+    },
+    {
+      "id": 90,
+      "text": "Entertainment Update: A blockbuster franchise releases its final chapter teaser poster.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T07:00:00Z"
+    },
+    {
+      "id": 91,
+      "text": "Lifestyle Suggestion: Setting phone-free zones at home fosters face-to-face conversations.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T06:00:00Z"
+    },
+    {
+      "id": 92,
+      "text": "Technology Watch: Advances in Li-Fi could bring high-speed internet through light bulbs.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T05:00:00Z"
+    },
+    {
+      "id": 93,
+      "text": "Science Note: Bacteria discovered in extreme caves could inform the search for life on Mars.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T04:00:00Z"
+    },
+    {
+      "id": 94,
+      "text": "Health Reminder: Consuming oily fish provides omega-3 fatty acids beneficial for brain health.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T03:00:00Z"
+    },
+    {
+      "id": 95,
+      "text": "Entertainment Insight: Virtual concerts allow artists to reach global audiences simultaneously.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T02:00:00Z"
+    },
+    {
+      "id": 96,
+      "text": "Lifestyle Hack: Using a gratitude jar can cultivate daily positivity within households.",
+      "category": "Lifestyle",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T01:00:00Z"
+    },
+    {
+      "id": 97,
+      "text": "Technology Bulletin: Smart city infrastructure integrates IoT sensors for energy efficiency.",
+      "category": "Technology",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-30T00:00:00Z"
+    },
+    {
+      "id": 98,
+      "text": "Science Teaser: New particle discoveries at the LHC challenge existing physics models.",
+      "category": "Science",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-29T23:00:00Z"
+    },
+    {
+      "id": 99,
+      "text": "Health Suggestion: Stretching your wrists regularly can prevent strain from extended typing.",
+      "category": "Health",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-29T22:00:00Z"
+    },
+    {
+      "id": 100,
+      "text": "Entertainment Trend: Fan-made content communities influence future franchise storylines.",
+      "category": "Entertainment",
+      "likes": 0,
+      "dislikes": 0,
+      "views": 0,
+      "view_time": 0.0,
+      "created_at": "2025-05-29T21:00:00Z"
+    }
+  ]
+}}

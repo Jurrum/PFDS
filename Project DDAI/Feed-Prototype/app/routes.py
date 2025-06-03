@@ -8,7 +8,7 @@ import requests
 from datetime import datetime, timedelta
 from pathlib import Path
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, current_app, session, flash
-from flask_login import current_user, login_required, UserMixin, LoginManager
+from functools import wraps
 from flask_session import Session as FlaskSession
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
@@ -20,7 +20,7 @@ from app.models.category import Category
 from app.utils.export_utils import save_questionnaire_responses, export_session_data
 from app.utils.session_utils import get_session_directory, move_to_session
 from app.utils.user_logging import UserLogger
-from app.utils.content_generator import generate_post, generate_posts
+# from app.utils.content_generator import generate_post, generate_posts # This line was removed as the module or functions are not found/defined as imported
 
 # Initialize Flask-Session
 flask_session = FlaskSession()
@@ -29,19 +29,29 @@ flask_session = FlaskSession()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Custom session requirement decorator
+def session_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_session_id' not in session or 'username' not in session:
+            flash('Your session has expired or is invalid. Please start a new session.', 'warning')
+            current_app.logger.warning(f"Session check failed for {request.path}. User_session_id: {session.get('user_session_id')}, Username: {session.get('username')}. Redirecting to start.")
+            return redirect(url_for('main.start'))
+        
+        # Switch to the user's database context
+        try:
+            current_app.logger.debug(f"session_required: Switching DB for user {session['username']} before accessing {request.path}")
+            current_app.switch_user_db(session['username'])
+        except Exception as e:
+            current_app.logger.error(f"Failed to switch DB for user {session.get('username')} in session_required decorator accessing {request.path}: {e}", exc_info=True)
+            flash('An error occurred while accessing your session data. Please try again.', 'danger')
+            return redirect(url_for('main.start'))
+            
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Create main Blueprint
 main = Blueprint('main', __name__)
-
-# Initialize login manager
-login_manager = LoginManager()
-
-class User(UserMixin):
-    def __init__(self, id):
-        self.id = id
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
 
 # Initialize user logger
 user_logger = UserLogger()
@@ -241,8 +251,9 @@ def start():
     return render_template('start.html')
 
 @main.route('/end-session', methods=['GET', 'POST'])
-@login_required
+@session_required
 def end_session():
+    current_app.logger.info("--- ENTERING END_SESSION ROUTE ---")
     """
     Handle session end process.
     
@@ -290,6 +301,7 @@ def end_session():
             })
             
         # For non-AJAX requests, redirect directly
+        current_app.logger.info(f"--- REDIRECTING TO POST_QUESTIONNAIRE: {post_questionnaire_url} ---")
         return redirect(post_questionnaire_url, code=303)
         
     except Exception as e:
@@ -631,7 +643,7 @@ def pre_questionnaire():
                          questions=ALGORITHM_RELATIONSHIP_QUESTIONS)
 
 @main.route('/post-questionnaire', methods=['GET', 'POST'])
-@login_required
+@session_required
 def post_questionnaire():
     """Show and handle the post-interaction questionnaire."""
     # Log session data for debugging
@@ -699,23 +711,41 @@ def post_questionnaire():
         
         try:
             # Get interaction data
-            interactions = request.form.getlist('interaction', [])
-            other_interaction = request.form.get('other_interaction', '').strip()
-            if other_interaction and 'other' in interactions:
-                interactions[interactions.index('other')] = f"other: {other_interaction}"
+            interactions_used_list = request.form.getlist('interactions_used', [])
+            other_interaction_text = request.form.get('interactions_other', '').strip()
+            if other_interaction_text and 'other' in interactions_used_list:
+                interactions_used_list[interactions_used_list.index('other')] = f"other: {other_interaction_text}"
                 
             # Store responses in the session or database
             responses = {
                 'timestamp': datetime.utcnow().isoformat(),
-                'interactions_used': interactions,
-                'ease_of_use': request.form.get('ease_of_use', ''),
-                'understanding': request.form.get('understanding', ''),
-                'control_level': request.form.get('control_level', ''),
-                'scale_responses': {f"q{i+1}": request.form.get(f"q{i+1}", '') for i in range(15) if f"q{i+1}" in request.form},
-                'feedback': request.form.get('feedback', '')
+                'prototype_keywords': request.form.get('prototype_keywords', ''),
+                'interactions_used': interactions_used_list,
+                # Section C: Change & Comparative Perception
+                'agency_compare': request.form.get('agency_compare', ''),
+                'transparency_compare': request.form.get('transparency_compare', ''),
+                'enjoyment_compare': request.form.get('enjoyment_compare', ''),
+                'effort_compare': request.form.get('effort_compare', ''),
+                'time_compare': request.form.get('time_compare', ''),
+                'surprise': request.form.get('surprise', ''),
+                'preference': request.form.get('preference', ''),
+                # Section B: Relationship-to-Algorithm Scale
+                'scale_responses': {f"pc{i+1}": request.form.get(f"pc{i+1}", '') for i in range(len(ALGORITHM_RELATIONSHIP_QUESTIONS))},
+                # Section D: Technical & UX Feedback
+                'usability_rating': request.form.get('usability', ''), # Renamed from ease_of_use to match HTML
+                'issues_described': request.form.get('issues', ''),
+                'suggestions_feedback': request.form.get('suggestions', '') # Mapped from feedback to suggestions
             }
             
             current_app.logger.info("Collected post-questionnaire responses")
+
+            # Save responses to CSV
+            try:
+                saved_filepath = save_questionnaire_responses(username, 'post', responses)
+                current_app.logger.info(f"Post-questionnaire responses saved to: {saved_filepath}")
+            except Exception as e:
+                current_app.logger.error(f"Error saving post-questionnaire to CSV: {e}", exc_info=True)
+                # Continue without saving if there's an error, but log it
             
             # Get existing data
             current_app.logger.info("Getting existing questionnaire data")
@@ -1410,6 +1440,7 @@ def generate_posts():
 
 
 @main.route('/dashboard')
+@session_required
 def dashboard():
     """Show the dashboard with stop button."""
     # Debug: Log all session data
@@ -1446,13 +1477,17 @@ def dashboard():
     ).filter(Content.rating_count>0).group_by(Content.category).all()
     trends = [{"category":c, "avg":float(a)} for c,a in cats]
 
-    weights = getattr(flask_session, 'weights', DEFAULT_WEIGHTS)
-    username = getattr(flask_session, 'username', '')
+    # Assuming DEFAULT_WEIGHTS is defined globally, e.g., DEFAULT_WEIGHTS = {'content': 1, 'category': 1}
+    # If not, it should be initialized in the session elsewhere or handled appropriately.
+    DEFAULT_WEIGHTS_PLACEHOLDER = {'content': 1.0, 'category': 1.0, 'freshness': 0.5} # Placeholder
+    weights = session.get('weights', DEFAULT_WEIGHTS_PLACEHOLDER)
+    # username is already available from user_session.username loaded earlier
+
     return render_template('dashboard.html',
         events=json.dumps(events),
         trends=json.dumps(trends),
         weights=weights,
-        username=username
+        username=user_session.username
     )
 
 

@@ -209,11 +209,19 @@
                 });
                 
                 // Check if the response is JSON
+                console.log('Response received:', response);
+                console.log('Response ok:', response.ok);
+                console.log('Response status:', response.status);
+                console.log('Response redirected:', response.redirected);
                 const contentType = response.headers.get('content-type');
+                console.log('Response Content-Type:', contentType);
+
                 if (contentType && contentType.includes('application/json')) {
                     const data = await response.json();
+                    console.log('Response JSON data:', data);
                     if (response.ok) {
                         // Redirect to the pre-questionnaire page on success
+                        console.log('Attempting redirect to:', data.redirect_url || "{{ url_for('main.pre_questionnaire') }}");
                         window.location.href = data.redirect_url || "{{ url_for('main.pre_questionnaire') }}";
                     } else {
                         throw new Error(data.error || 'Failed to start session');
@@ -223,7 +231,8 @@
                     if (response.redirected) {
                         window.location.href = response.url;
                     } else {
-                        throw new Error('Unexpected response from server');
+                        console.error('Response was not JSON and not a redirect.');
+                        throw new Error('Unexpected response from server (not JSON, not redirect)');
                     }
                 }
             } catch (error) {

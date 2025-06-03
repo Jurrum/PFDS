@@ -6,3 +6,5 @@ python-dotenv==1.0.0         # to load .env config (e.g. API keys)
 openai==0.27.6               # for infinite‐scroll content generation
 gunicorn==21.2.0             # production WSGI server
 requests==2.31.0             # for API requests
+Flask-Login==0.6.3           # for user session management
+Flask-Session==0.8.0         # for server-side session management
