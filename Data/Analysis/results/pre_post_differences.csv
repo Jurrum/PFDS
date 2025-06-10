@@ -1,0 +1,31 @@
+,Mean_Difference,Std_Deviation,P_Value,Significant
+Addiction Tendency,,,,False
+Addiction Tendency_diff,2.2,1.3038404810405297,,False
+Agency,,,,False
+Agency_diff,1.0,1.224744871391589,,False
+Algorithm Transparency,,,0.203110663720055,False
+Algorithm Transparency_diff,-0.5,0.8366600265340756,,False
+Content Diversity,,,,False
+Content Diversity_diff,-1.8,1.7888543819998317,,False
+Content Satisfaction,,,0.28559094064520096,False
+Content Satisfaction_diff,0.6666666666666666,1.3662601021279464,,False
+Engagement,,,0.45602111641350673,False
+Engagement_diff,0.5,1.51657508881031,,False
+Enjoyment,,,,False
+Enjoyment_diff,-0.4,1.6733200530681511,,False
+Frustration,,,0.004966620866137675,True
+Frustration_diff,2.6666666666666665,1.3662601021279464,,False
+Information Quality,,,,False
+Information Quality_diff,0.2,0.8366600265340756,,False
+Mental Effort,,,,False
+Mental Effort_diff,2.8,0.8366600265340756,,False
+Overall Satisfaction,,,,False
+Overall Satisfaction_diff,0.2,0.447213595499958,,False
+Perceived Control,,,0.5176719276245942,False
+Perceived Control_diff,0.5,1.760681686165901,,False
+Personalization,,,,False
+Personalization_diff,1.2,0.8366600265340756,,False
+Time Awareness,,,,False
+Time Awareness_diff,-2.0,1.4142135623730951,,False
+Trust,,,,False
+Trust_diff,0.2,1.3038404810405297,,False

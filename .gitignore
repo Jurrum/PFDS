@@ -124,3 +124,6 @@ cython_debug/
 
 # Ignore feed_data.json file
 feed_data.json
+
+# Ignore Users folder
+Users/
